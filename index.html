@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JENNY — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f4f2ee;
+    --gray: #888;
+    --light-gray: #d0cdc8;
+    --accent: #f4f2ee;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--white);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(244,242,238,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* Loader */
+  #loader {
+    position: fixed; inset: 0;
+    background: var(--black);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease;
+  }
+  #loader.hidden { opacity: 0; pointer-events: none; }
+  .loader-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 10vw, 120px);
+    letter-spacing: 0.15em;
+    overflow: hidden;
+  }
+  .loader-text span {
+    display: inline-block;
+    animation: loaderReveal 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+    transform: translateY(110%);
+  }
+  @keyframes loaderReveal {
+    to { transform: translateY(0); }
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 48px;
+    mix-blend-mode: difference;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 1.8s forwards;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.2em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    position: relative;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0;
+    width: 0; height: 1px;
+    background: var(--white);
+    transition: width 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .nav-links a:hover { opacity: 1; }
+  .nav-links a:hover::after { width: 100%; }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* Hero */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Grain texture overlay */
+  #hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  /* Vertical line decoration */
+  .v-line {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: rgba(244,242,238,0.06);
+  }
+  .v-line:nth-child(1) { left: 25%; }
+  .v-line:nth-child(2) { left: 50%; }
+  .v-line:nth-child(3) { left: 75%; }
+
+  .hero-content { position: relative; z-index: 2; }
+
+  /* Rolling text ticker */
+  .ticker-wrap {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    overflow: hidden;
+    opacity: 0.06;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .ticker {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker 20s linear infinite;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 14vw, 180px);
+    letter-spacing: 0.05em;
+    color: var(--white);
+  }
+  .ticker span { padding-right: 60px; }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Main headline */
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: slideUp 0.8s cubic-bezier(0.16,1,0.3,1) 1.6s forwards;
+  }
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 14vw, 180px);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .hero-name .line {
+    display: block;
+    overflow: hidden;
+  }
+  .hero-name .line span {
+    display: block;
+    transform: translateY(110%);
+    animation: slideUp2 1s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .hero-name .line:nth-child(1) span { animation-delay: 1.7s; }
+  .hero-name .line:nth-child(2) span { animation-delay: 1.85s; }
+
+  @keyframes slideUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp2 {
+    to { transform: translateY(0); }
+  }
+
+  /* Rotating role badge */
+  .role-rotator {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 2.3s forwards;
+  }
+  .role-dot {
+    width: 6px; height: 6px;
+    background: var(--white);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  .role-text {
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--light-gray);
+    overflow: hidden;
+    height: 20px;
+  }
+  .role-text .role-inner {
+    display: flex;
+    flex-direction: column;
+    animation: roleScroll 6s cubic-bezier(0.4,0,0.2,1) infinite;
+  }
+  .role-text .role-inner span {
+    height: 20px;
+    line-height: 20px;
+    display: block;
+  }
+  @keyframes roleScroll {
+    0%,20%   { transform: translateY(0); }
+    25%,45%  { transform: translateY(-20px); }
+    50%,70%  { transform: translateY(-40px); }
+    75%,95%  { transform: translateY(-60px); }
+    100%     { transform: translateY(0); }
+  }
+
+  /* Hero bottom row */
+  .hero-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 2.5s forwards;
+  }
+  .hero-desc {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    line-height: 2;
+    color: var(--light-gray);
+    max-width: 320px;
+  }
+  .hero-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    border: 1px solid rgba(244,242,238,0.3);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: border-color 0.3s, background 0.3s, color 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--white);
+    transform: translateX(-101%);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    z-index: -1;
+  }
+  .cta-btn:hover { color: var(--black); border-color: var(--white); }
+  .cta-btn:hover::before { transform: translateX(0); }
+  .cta-arrow { font-size: 16px; transition: transform 0.3s; }
+  .cta-btn:hover .cta-arrow { transform: translateX(4px); }
+  .scroll-hint {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gray);
+    text-transform: uppercase;
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 3s forwards;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, rgba(244,242,238,0.5), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+  .scroll-text {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--gray);
+    text-transform: uppercase;
+  }
+
+  /* Works section */
+  #works {
+    padding: 120px 48px;
+    position: relative;
+  }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 64px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gray);
+  }
+
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+  .work-item {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: #111;
+    cursor: none;
+  }
+  .work-item:first-child {
+    grid-row: span 2;
+    aspect-ratio: auto;
+  }
+  .work-bg {
+    position: absolute; inset: 0;
+    background: #1a1a1a;
+    transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .work-item:hover .work-bg { transform: scale(1.04); }
+
+  .work-number {
+    position: absolute;
+    top: 24px; left: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--gray);
+    z-index: 2;
+  }
+  .work-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 32px 28px;
+    background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 100%);
+    z-index: 2;
+    transform: translateY(8px);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .work-item:hover .work-info { transform: translateY(0); }
+  .work-cat {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .work-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  /* Placeholder patterns for work items */
+  .work-pattern-1 { background: repeating-linear-gradient(45deg, #111, #111 2px, #161616 2px, #161616 12px); }
+  .work-pattern-2 { background: repeating-linear-gradient(-45deg, #111, #111 2px, #181818 2px, #181818 8px); }
+  .work-pattern-3 { background: radial-gradient(circle at 30% 70%, #1e1e1e 0%, #111 60%); }
+  .work-pattern-4 { background: repeating-linear-gradient(90deg, #111, #111 3px, #161616 3px, #161616 16px); }
+
+  /* About strip */
+  #about {
+    padding: 120px 48px;
+    border-top: 1px solid rgba(244,242,238,0.08);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+  }
+  .about-heading em {
+    font-style: normal;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--white);
+  }
+  .about-body {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    line-height: 2.2;
+    color: var(--light-gray);
+  }
+  .about-skills {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .skill-tag {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid rgba(244,242,238,0.2);
+    padding: 6px 14px;
+    color: var(--light-gray);
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .skill-tag:hover { border-color: var(--white); color: var(--white); }
+
+  /* Platforms strip */
+  .platforms-strip {
+    padding: 40px 48px;
+    border-top: 1px solid rgba(244,242,238,0.08);
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .platforms-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--gray);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .platform-list {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+  .platform-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.15em;
+    color: rgba(244,242,238,0.25);
+    transition: color 0.3s;
+  }
+  .platform-item:hover { color: var(--white); }
+
+  /* Contact */
+  #contact {
+    padding: 120px 48px;
+    border-top: 1px solid rgba(244,242,238,0.08);
+    text-align: center;
+  }
+  .contact-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 140px);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    margin-bottom: 48px;
+  }
+  .contact-heading span {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(244,242,238,0.4);
+  }
+  .contact-sub {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    color: var(--gray);
+    margin-bottom: 48px;
+    line-height: 2;
+  }
+  .contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 48px;
+    border: 1px solid rgba(244,242,238,0.4);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.4s;
+  }
+  .contact-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--white);
+    transform: translateX(-101%);
+    transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    z-index: -1;
+  }
+  .contact-btn:hover { color: var(--black); }
+  .contact-btn:hover::before { transform: translateX(0); }
+
+  /* Footer */
+  footer {
+    padding: 32px 48px;
+    border-top: 1px solid rgba(244,242,238,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+  }
+  .footer-lang {
+    display: flex;
+    gap: 16px;
+  }
+  .lang-btn {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+    cursor: none;
+    transition: color 0.3s;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+  .lang-btn.active, .lang-btn:hover { color: var(--white); }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { gap: 24px; }
+    #hero { padding: 0 24px 60px; }
+    #works, #about, #contact { padding: 80px 24px; }
+    .works-grid { grid-template-columns: 1fr; }
+    .work-item:first-child { grid-row: span 1; aspect-ratio: 4/3; }
+    #about { grid-template-columns: 1fr; gap: 40px; }
+    footer { padding: 24px; flex-direction: column; gap: 16px; text-align: center; }
+    .platforms-strip { padding: 32px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+
+  /* Liquid Metal Button */
+  .liquid-btn {
+    position: relative; display: inline-flex;
+    align-items: center; justify-content: center;
+    width: 160px; height: 46px; border-radius: 100px;
+    text-decoration: none; cursor: none; overflow: hidden; isolation: isolate;
+  }
+  .liquid-btn-lg { width: 220px; height: 54px; }
+  .liquid-canvas {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    border-radius: 100px; z-index: 1;
+  }
+  .liquid-inner {
+    position: absolute; inset: 2px; border-radius: 100px;
+    background: linear-gradient(180deg, #202020 0%, #0a0a0a 100%);
+    z-index: 2; transition: box-shadow 0.2s ease;
+  }
+  .liquid-btn:hover .liquid-inner { box-shadow: inset 0 2px 6px rgba(0,0,0,0.5); }
+  .liquid-label {
+    position: relative; z-index: 3;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(244,242,238,0.75); font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300; text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    transition: color 0.3s, letter-spacing 0.3s; white-space: nowrap;
+  }
+  .liquid-btn:hover .liquid-label { color: rgba(244,242,238,1); letter-spacing: 0.22em; }
+
+  /* Page Switch */
+  #home-page { display: block; }
+  #about-page { display: none; }
+  #career-page { display: none; }
+  body.show-about #home-page { display: none; }
+  body.show-about #about-page { display: block; }
+  body.show-career #home-page { display: none; }
+  body.show-career #career-page { display: block; }
+  #beams-page { display: none; }
+  body.show-beams #home-page { display: none; }
+  body.show-beams #beams-page { display: block; }
+
+  /* Work item hover overlay */
+  .work-overlay {
+    position: absolute; inset: 0; z-index: 3;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--white); opacity: 0;
+    transition: opacity 0.4s;
+    background: rgba(10,10,10,0.4);
+  }
+  .work-item:hover .work-overlay { opacity: 1; }
+
+  /* ── BEAMS Case Study Page ── */
+  #beams-page .bp-nav-back {
+    color: var(--gray); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px; transition: color 0.3s;
+    background: none; border: none; font-family: inherit; cursor: none;
+  }
+  #beams-page .bp-nav-back:hover { color: var(--white); }
+
+  /* Hero full-width image */
+  #beams-page .bp-hero-img-wrap {
+    width: 100%; border-bottom: 1px solid rgba(244,242,238,0.08);
+    overflow: hidden;
+  }
+  #beams-page .bp-hero-img-wrap img {
+    width: 100%; max-height: 520px; object-fit: cover; object-position: center top; display: block;
+  }
+  #beams-page .bp-hero-img-placeholder {
+    width: 100%; aspect-ratio: 21/9; max-height: 520px;
+    background: #111; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px; color: rgba(244,242,238,0.2); font-size: 11px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  #beams-page .bp-hero-img-placeholder .ph-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: rgba(244,242,238,0.08);
+  }
+
+  /* Hero text + meta grid */
+  #beams-page .bp-hero {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end;
+    padding: 64px 48px 72px; max-width: 1200px; margin: 0 auto;
+  }
+  #beams-page .bp-hero-label {
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 20px; display: block;
+  }
+  #beams-page .bp-hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 9vw, 120px); line-height: 0.9; letter-spacing: 0.02em;
+    opacity: 0; animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+  }
+  #beams-page .bp-hero-sub {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(18px, 2.5vw, 30px); color: var(--gray);
+    letter-spacing: 0.05em; margin-top: 8px;
+  }
+  #beams-page .bp-meta {
+    display: flex; flex-direction: column; gap: 20px;
+    opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+  #beams-page .bp-meta-item { border-top: 1px solid rgba(244,242,238,0.08); padding-top: 14px; }
+  #beams-page .bp-meta-label {
+    font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 4px;
+  }
+  #beams-page .bp-meta-value { font-size: 13px; color: var(--light-gray); line-height: 1.6; }
+
+  /* Divider */
+  #beams-page .bp-divider { border: none; border-top: 1px solid rgba(244,242,238,0.08); margin: 0 48px; }
+
+  /* Stats strip */
+  #beams-page .bp-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    padding: 0 48px; max-width: 1200px; margin: 0 auto;
+  }
+  #beams-page .bp-stat {
+    padding: 48px 32px; border-right: 1px solid rgba(244,242,238,0.08); text-align: center;
+  }
+  #beams-page .bp-stat:last-child { border-right: none; }
+  #beams-page .bp-stat-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.2rem, 4.5vw, 4rem);
+    line-height: 1; display: block; margin-bottom: 8px;
+  }
+  #beams-page .bp-stat-label { font-size: 11px; color: var(--gray); letter-spacing: 0.08em; line-height: 1.6; }
+
+  /* Sections */
+  #beams-page .bp-section {
+    max-width: 1200px; margin: 0 auto; padding: 80px 48px;
+  }
+  #beams-page .bp-section-hd {
+    display: flex; align-items: baseline; gap: 20px; margin-bottom: 48px;
+  }
+  #beams-page .bp-section-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 72px;
+    color: rgba(244,242,238,0.06); line-height: 1;
+  }
+  #beams-page .bp-section-en {
+    font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.05em; line-height: 1;
+  }
+  #beams-page .bp-section-ja {
+    font-size: 11px; color: var(--gray); letter-spacing: 0.12em; display: block; margin-top: 2px;
+  }
+  #beams-page .bp-body {
+    font-family: 'Shippori Mincho', serif; font-size: 15px; color: var(--light-gray);
+    line-height: 2.2; max-width: 720px;
+  }
+  #beams-page .bp-body p + p { margin-top: 1.2em; }
+  #beams-page .bp-body ul { list-style: none; padding: 0; margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+  #beams-page .bp-body li { padding-left: 24px; position: relative; }
+  #beams-page .bp-body li::before { content: '—'; position: absolute; left: 0; color: var(--gray); }
+
+  /* Two-col layout */
+  #beams-page .bp-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+
+  /* Image blocks */
+  #beams-page .bp-img { width: 100%; object-fit: cover; display: block; border: 1px solid rgba(244,242,238,0.08); }
+  #beams-page .bp-img.portrait { aspect-ratio: 9/16; max-height: 600px; object-position: top; }
+  #beams-page .bp-img.landscape { aspect-ratio: 4/3; }
+  #beams-page .bp-img-ph {
+    border: 1px dashed rgba(244,242,238,0.1); background: #0f0f0f;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: rgba(244,242,238,0.18); font-size: 10px; gap: 6px;
+    padding: 32px; text-align: center; line-height: 1.6; letter-spacing: 0.1em;
+  }
+  #beams-page .bp-img-ph.portrait { aspect-ratio: 9/16; max-height: 560px; }
+  #beams-page .bp-img-ph.landscape { aspect-ratio: 4/3; }
+  #beams-page .bp-img-ph .ph-num { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: rgba(244,242,238,0.08); }
+  #beams-page .bp-img-caption { font-size: 10px; color: var(--gray); letter-spacing: 0.08em; margin-top: 10px; }
+
+  /* Strategy tags */
+  #beams-page .bp-stags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  #beams-page .bp-stag {
+    border: 1px solid rgba(244,242,238,0.14); padding: 7px 16px;
+    font-size: 11px; color: var(--light-gray); letter-spacing: 0.08em;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  #beams-page .bp-stag:hover { border-color: rgba(244,242,238,0.4); color: var(--white); }
+
+  /* Reel cards */
+  #beams-page .bp-reel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; margin-top: 40px; }
+  #beams-page .bp-reel-card {
+    border: 1px solid rgba(244,242,238,0.08); display: flex; flex-direction: column;
+    overflow: hidden; text-decoration: none; transition: border-color 0.3s;
+  }
+  #beams-page .bp-reel-card:hover { border-color: rgba(244,242,238,0.3); }
+  #beams-page .bp-reel-thumb {
+    aspect-ratio: 16/9; background: #111;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  #beams-page .bp-reel-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+  #beams-page .bp-reel-play {
+    width: 52px; height: 52px; border: 1.5px solid var(--white); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  #beams-page .bp-reel-play::after {
+    content: ''; display: block; border: 9px solid transparent;
+    border-left: 14px solid var(--white); margin-left: 4px;
+  }
+  #beams-page .bp-reel-info { padding: 24px 28px; }
+  #beams-page .bp-reel-tag {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 8px; display: block;
+  }
+  #beams-page .bp-reel-title {
+    font-family: 'Shippori Mincho', serif; font-size: 15px; color: var(--white);
+    line-height: 1.7; margin-bottom: 12px;
+  }
+  #beams-page .bp-reel-stat { font-size: 11px; color: var(--gray); display: flex; gap: 20px; flex-wrap: wrap; }
+  #beams-page .bp-reel-stat span { color: var(--light-gray); }
+
+  /* Results grid */
+  #beams-page .bp-results-grid { display: grid; grid-template-columns: 1fr; gap: 2px; }
+  #beams-page .bp-result-box { border: 1px solid rgba(244,242,238,0.08); padding: 28px 32px; transition: background 0.3s; }
+  #beams-page .bp-result-box:hover { background: #141414; }
+  #beams-page .bp-result-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 4vw, 56px); line-height: 1; margin-bottom: 6px;
+  }
+  #beams-page .bp-result-label { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; }
+
+  /* CTA */
+  #beams-page .bp-cta {
+    padding: 80px 48px; max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 40px;
+    border-top: 1px solid rgba(244,242,238,0.08);
+  }
+  #beams-page .bp-cta-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 72px);
+    letter-spacing: 0.03em; line-height: 1.05; margin-bottom: 12px;
+  }
+  #beams-page .bp-cta-sub { font-size: 12px; color: var(--gray); letter-spacing: 0.1em; }
+  #beams-page .bp-cta-links { display: flex; gap: 12px; flex-wrap: wrap; }
+  #beams-page .bp-btn {
+    border: 1px solid rgba(244,242,238,0.4); color: var(--white); text-decoration: none;
+    padding: 14px 36px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    position: relative; overflow: hidden; transition: color 0.4s; display: inline-block;
+  }
+  #beams-page .bp-btn::before {
+    content: ''; position: absolute; inset: 0; background: var(--white);
+    transform: translateX(-101%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); z-index: -1;
+  }
+  #beams-page .bp-btn:hover { color: var(--black); }
+  #beams-page .bp-btn:hover::before { transform: translateX(0); }
+  #beams-page .bp-btn-ghost {
+    border: 1px solid rgba(244,242,238,0.14); color: var(--gray); text-decoration: none;
+    padding: 14px 36px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    transition: border-color 0.3s, color 0.3s; display: inline-block; background: none; font-family: inherit; cursor: none;
+  }
+  #beams-page .bp-btn-ghost:hover { border-color: rgba(244,242,238,0.4); color: var(--white); }
+
+  @media (max-width: 768px) {
+    #beams-page .bp-hero { grid-template-columns: 1fr; padding: 40px 24px 56px; gap: 40px; }
+    #beams-page .bp-divider { margin: 0 24px; }
+    #beams-page .bp-stats { grid-template-columns: repeat(2, 1fr); padding: 0 24px; }
+    #beams-page .bp-stat { border-bottom: 1px solid rgba(244,242,238,0.08); }
+    #beams-page .bp-section { padding: 56px 24px; }
+    #beams-page .bp-two-col { grid-template-columns: 1fr; gap: 32px; }
+    #beams-page .bp-reel-grid { grid-template-columns: 1fr; }
+    #beams-page .bp-cta { padding: 56px 24px; flex-direction: column; align-items: flex-start; }
+  }
+
+  /* About Page */
+  .page { padding-top: 120px; }
+  .about-hero {
+    padding: 60px 48px 80px; position: relative;
+    border-bottom: 1px solid rgba(244,242,238,0.06);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end;
+  }
+  .about-eyebrow {
+    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 24px;
+    display: flex; align-items: center; gap: 16px;
+    opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+  .about-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--gray); }
+  .about-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 10vw, 130px);
+    line-height: 0.9; letter-spacing: 0.02em;
+    opacity: 0; animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
+  }
+  .about-title em { font-style: normal; color: transparent; -webkit-text-stroke: 1px var(--white); }
+  .about-hero-right { opacity: 0; animation: fadeUp 0.8s ease 0.5s forwards; }
+  .photo-wrap { display: flex; align-items: center; gap: 28px; margin-left: auto; }
+  .photo-circle {
+    width: 140px; height: 140px; border-radius: 50%;
+    overflow: hidden; flex-shrink: 0;
+    border: 1px solid rgba(244,242,238,0.15);
+  }
+  .photo-img {
+    width: 100%; height: 100%; object-fit: cover;
+    object-position: center 12%; transform: scale(1.4); transform-origin: center 15%;
+    filter: grayscale(15%); transition: filter 0.4s;
+  }
+  .photo-circle:hover .photo-img { filter: grayscale(0%); }
+  .photo-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.1em; }
+  .photo-name-ja { font-family: 'Shippori Mincho', serif; font-size: 11px; color: var(--gray); letter-spacing: 0.15em; margin-top: 4px; }
+  .section-intro {
+    padding: 100px 48px; display: grid; grid-template-columns: 1fr 2fr; gap: 80px;
+    border-bottom: 1px solid rgba(244,242,238,0.06); align-items: start;
+  }
+  .section-tag { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gray); display: flex; align-items: center; gap: 12px; padding-top: 8px; }
+  .section-tag::before { content: ''; width: 24px; height: 1px; background: var(--gray); }
+  .intro-body { font-family: 'Shippori Mincho', serif; font-size: 17px; line-height: 2.4; color: var(--light-gray); }
+  .intro-body strong { color: var(--white); font-weight: 600; }
+  .intro-name-block { margin-top: 40px; padding-top: 32px; border-top: 1px solid rgba(244,242,238,0.08); display: flex; align-items: baseline; gap: 20px; }
+  .intro-name-cn { font-family: 'Shippori Mincho', serif; font-size: 28px; font-weight: 600; color: var(--white); letter-spacing: 0.1em; }
+  .intro-name-en { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.2em; color: var(--gray); }
+  .intro-origin { font-size: 11px; letter-spacing: 0.15em; color: var(--gray); margin-top: 6px; }
+  .section-strength { padding: 100px 48px; border-bottom: 1px solid rgba(244,242,238,0.06); }
+  .strength-header { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; margin-bottom: 64px; }
+  .strength-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 6vw, 80px); line-height: 0.95; letter-spacing: 0.02em; }
+  .strength-title em { font-style: normal; color: transparent; -webkit-text-stroke: 1px var(--white); }
+  .strength-lead { font-family: 'Shippori Mincho', serif; font-size: 15px; line-height: 2.2; color: var(--light-gray); padding-top: 8px; }
+  .strength-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .strength-card { padding: 40px 32px; background: #0f0f0f; border: 1px solid rgba(244,242,238,0.04); transition: background 0.4s, border-color 0.4s; }
+  .strength-card:hover { background: #141414; border-color: rgba(244,242,238,0.1); }
+  .strength-num { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.2em; color: var(--gray); margin-bottom: 24px; }
+  .strength-card-title { font-family: 'Shippori Mincho', serif; font-size: 18px; font-weight: 600; line-height: 1.6; margin-bottom: 16px; color: var(--white); }
+  .strength-card-body { font-size: 12px; line-height: 2; color: var(--gray); letter-spacing: 0.05em; }
+  .section-skills { padding: 100px 48px; border-bottom: 1px solid rgba(244,242,238,0.06); }
+  .skills-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: start; }
+  .skills-categories { display: flex; flex-direction: column; gap: 48px; }
+  .skill-cat-label { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .skill-cat-label::before { content: ''; width: 20px; height: 1px; background: rgba(244,242,238,0.2); }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .lang-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+  .lang-pill { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 0.15em; padding: 8px 20px; border: 1px solid rgba(244,242,238,0.15); color: var(--light-gray); transition: all 0.3s; }
+  .lang-pill:hover { border-color: var(--white); color: var(--white); }
+  .section-interests { padding: 100px 48px; border-bottom: 1px solid rgba(244,242,238,0.06); }
+  .interests-header { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; margin-bottom: 64px; }
+  .interests-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .interest-block { padding: 48px 40px; background: #0f0f0f; border: 1px solid rgba(244,242,238,0.04); }
+  .interest-block-label { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); margin-bottom: 32px; display: flex; align-items: center; gap: 12px; }
+  .interest-block-label::before { content: ''; width: 20px; height: 1px; background: rgba(244,242,238,0.2); }
+  .interest-items { display: flex; flex-wrap: wrap; gap: 10px; }
+  .interest-item { font-family: 'Shippori Mincho', serif; font-size: 13px; padding: 6px 16px; border: 1px solid rgba(244,242,238,0.1); color: var(--light-gray); letter-spacing: 0.05em; transition: border-color 0.3s, color 0.3s; }
+  .interest-item:hover { border-color: rgba(244,242,238,0.4); color: var(--white); }
+  .section-sns { padding: 100px 48px; text-align: center; border-bottom: 1px solid rgba(244,242,238,0.06); }
+  .sns-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 6vw, 72px); letter-spacing: 0.04em; margin-bottom: 16px; }
+  .sns-heading span { color: transparent; -webkit-text-stroke: 1px rgba(244,242,238,0.3); }
+  .sns-sub { font-size: 11px; letter-spacing: 0.2em; color: var(--gray); text-transform: uppercase; margin-bottom: 56px; }
+  .sns-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+  .sns-btn { display: inline-flex; align-items: center; gap: 12px; padding: 16px 32px; border: 1px solid rgba(244,242,238,0.2); color: var(--light-gray); text-decoration: none; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; transition: all 0.3s; position: relative; overflow: hidden; }
+  .sns-btn::before { content: ''; position: absolute; inset: 0; background: var(--white); transform: translateX(-101%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); z-index: -1; }
+  .sns-btn:hover { color: var(--black); border-color: var(--white); }
+  .sns-btn:hover::before { transform: translateX(0); }
+  .sns-icon { width: 16px; height: 16px; fill: currentColor; }
+  .section-cta { padding: 120px 48px; text-align: center; }
+  .cta-label { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gray); margin-bottom: 32px; }
+  .cta-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 8vw, 100px); line-height: 1; letter-spacing: 0.03em; margin-bottom: 48px; }
+  .cta-heading span { color: transparent; -webkit-text-stroke: 1px rgba(244,242,238,0.35); }
+  .footer-back { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); text-decoration: none; transition: color 0.3s; background: none; border: none; font-family: inherit; }
+  .footer-back:hover { color: var(--white); }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 768px) {
+    .about-hero, .section-intro, .strength-header, .skills-grid, .interests-header { grid-template-columns: 1fr; gap: 40px; }
+    .about-hero { padding: 40px 24px 60px; }
+    .section-intro, .section-strength, .section-skills, .section-interests, .section-sns, .section-cta { padding: 64px 24px; }
+    .strength-cards, .interests-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Career Page ── */
+  .career-hero {
+    padding: 60px 48px 80px;
+    border-bottom: 1px solid rgba(244,242,238,0.06);
+  }
+  .career-eyebrow {
+    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 24px;
+    display: flex; align-items: center; gap: 16px;
+    opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+  .career-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--gray); }
+  .career-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 10vw, 130px);
+    line-height: 0.9; letter-spacing: 0.02em;
+    opacity: 0; animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
+  }
+  .career-title em { font-style: normal; color: transparent; -webkit-text-stroke: 1px var(--white); }
+  .career-lead {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px; line-height: 2.4; color: var(--light-gray);
+    max-width: 540px; margin-top: 32px;
+    opacity: 0; animation: fadeUp 0.8s ease 0.5s forwards;
+  }
+
+  /* Stats row */
+  .career-stats {
+    padding: 80px 48px;
+    border-bottom: 1px solid rgba(244,242,238,0.06);
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+  }
+  .stat-block {
+    padding: 40px 32px; background: #0f0f0f;
+    border: 1px solid rgba(244,242,238,0.04);
+    transition: background 0.4s, border-color 0.4s;
+  }
+  .stat-block:hover { background: #141414; border-color: rgba(244,242,238,0.1); }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 64px); letter-spacing: 0.03em;
+    line-height: 1; margin-bottom: 8px; color: var(--white);
+  }
+  .stat-num sup { font-size: 0.45em; color: var(--gray); vertical-align: super; }
+  .stat-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); }
+
+  /* Timeline */
+  .timeline-section {
+    padding: 100px 48px;
+    border-bottom: 1px solid rgba(244,242,238,0.06);
+  }
+  .timeline-header { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; margin-bottom: 80px; }
+  .timeline { position: relative; display: flex; flex-direction: column; padding-left: 32px; }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 0; top: 10px; bottom: 10px;
+    width: 1px; background: rgba(244,242,238,0.1);
+  }
+  .timeline-item {
+    position: relative; padding: 0 0 72px 44px;
+  }
+  .timeline-item:last-child { padding-bottom: 0; }
+  .timeline-dot {
+    position: absolute; left: -5px; top: 8px;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--black); border: 1px solid rgba(244,242,238,0.35);
+    transition: background 0.3s, border-color 0.3s, transform 0.3s;
+  }
+  .timeline-item:hover .timeline-dot { background: var(--white); border-color: var(--white); transform: scale(1.3); }
+  .timeline-period {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px; letter-spacing: 0.28em;
+    color: var(--gray); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .timeline-period-line { display: inline-block; width: 20px; height: 1px; background: rgba(244,242,238,0.2); }
+  .timeline-company {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(24px, 3.5vw, 40px);
+    letter-spacing: 0.04em; line-height: 1;
+    margin-bottom: 8px; color: var(--white);
+  }
+  .timeline-role {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 20px;
+  }
+  .timeline-desc {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px; line-height: 2.3; color: var(--light-gray); max-width: 520px;
+  }
+  .timeline-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .timeline-tag {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    border: 1px solid rgba(244,242,238,0.14);
+    padding: 5px 13px; color: var(--gray);
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .timeline-tag:hover { border-color: rgba(244,242,238,0.4); color: var(--light-gray); }
+
+  @media (max-width: 768px) {
+    .career-hero { padding: 40px 24px 60px; }
+    .timeline-section { padding: 64px 24px; }
+    .timeline-header { grid-template-columns: 1fr; gap: 32px; }
+    .career-stats { grid-template-columns: repeat(2, 1fr); padding: 48px 24px; }
+  }
+
+
+  /* Spinning Text Circle */
+  .spinning-circle {
+    position: absolute;
+    top: 50%;
+    right: 8%;
+    transform: translateY(-50%);
+    width: 260px;
+    height: 260px;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeIn 1s ease 2.8s forwards;
+  }
+  .spinning-circle svg {
+    width: 100%;
+    height: 100%;
+  }
+  .spinning-circle .spin-group {
+    transform-origin: 50px 50px;
+    animation: spinCircle 18s linear infinite;
+  }
+  @keyframes spinCircle {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .spin-text {
+    font-size: 6.2px;
+    fill: rgba(244,242,238,0.45);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .spin-dot {
+    width: 4px;
+    height: 4px;
+    background: rgba(244,242,238,0.5);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-text">
+    <span style="animation-delay:0s">J</span><span style="animation-delay:0.07s">E</span><span style="animation-delay:0.14s">N</span><span style="animation-delay:0.21s">N</span><span style="animation-delay:0.28s">Y</span>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <a href="#" class="nav-logo" onclick="showPage('home');return false;">JENNY</a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPage('home');setTimeout(()=>document.getElementById('works').scrollIntoView({behavior:'smooth'}),50);return false;">Works</a></li>
+    <li><a href="#" onclick="showPage('about');return false;" id="navAbout">About</a></li>
+    <li><a href="#" onclick="showPage('career');return false;" id="navCareer">Career</a></li>
+    <li><a href="#" onclick="showPage('home');setTimeout(()=>document.getElementById('contact').scrollIntoView({behavior:'smooth'}),50);return false;">Contact</a></li>
+  </ul>
+</nav>
+
+<div id="home-page">
+<!-- Hero -->
+<section id="hero">
+  <div class="v-line"></div>
+  <div class="v-line"></div>
+  <div class="v-line"></div>
+
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>SNS CREATOR</span>
+      <span>BRAND PLANNER</span>
+      <span>VISUAL DIRECTOR</span>
+      <span>CONTENT MAKER</span>
+      <span>SNS CREATOR</span>
+      <span>BRAND PLANNER</span>
+      <span>VISUAL DIRECTOR</span>
+      <span>CONTENT MAKER</span>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">SNS Creator &amp; Brand Planner — Based in Japan</p>
+    <h1 class="hero-name">
+      <span class="line"><span>JENNY.</span></span>
+    </h1>
+    <div class="role-rotator">
+      <div class="role-dot"></div>
+      <div class="role-text">
+        <div class="role-inner">
+          <span>SNS ビジュアルデザイナー</span>
+          <span>コンテンツプランナー</span>
+          <span>動画クリエイター</span>
+          <span>ブランドプロデューサー</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-bottom">
+      <p class="hero-desc">
+        ブランドの世界観を、<br>
+        SNSというキャンバスで表現する。<br>
+        Instagram / TikTok / X を中心に、<br>
+        コンテンツ企画から制作まで一貫対応。
+      </p>
+      <div class="hero-cta">
+        <a href="#" onclick="document.getElementById('works').scrollIntoView({behavior:'smooth'});return false;" class="liquid-btn" id="heroBtn">
+          <canvas class="liquid-canvas" id="heroBtnCanvas"></canvas>
+          <span class="liquid-inner"></span>
+          <span class="liquid-label">View Works →</span>
+        </a>
+        <span class="scroll-hint">Scroll to explore</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Spinning Text Circle -->
+  <div class="spinning-circle">
+    <svg viewBox="0 0 100 100">
+      <defs>
+        <path id="spinPath"
+          d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
+          fill="none"/>
+      </defs>
+      <g class="spin-group">
+        <text class="spin-text">
+          <textPath href="#spinPath" startOffset="0%">
+            SNS CREATOR • BRAND PLANNER • VISUAL DIRECTOR •
+          </textPath>
+        </text>
+      </g>
+      <circle cx="50" cy="50" r="1.5" fill="rgba(244,242,238,0.5)"/>
+    </svg>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<!-- Works -->
+<section id="works">
+  <p class="section-label reveal">Selected Works</p>
+  <div class="works-grid">
+    <div class="work-item reveal" onclick="showPage('beams');return false;" style="cursor:none;">
+      <div class="work-bg work-pattern-1"></div>
+      <div class="work-number">01</div>
+      <div class="work-overlay">View Case Study →</div>
+      <div class="work-info">
+        <p class="work-cat">Social Media Strategy</p>
+        <h3 class="work-title">BEAMS Taiwan<br>SNS立ち上げ</h3>
+      </div>
+    </div>
+    <div class="work-item reveal" style="transition-delay:0.1s">
+      <div class="work-bg work-pattern-2"></div>
+      <div class="work-number">02</div>
+      <div class="work-info">
+        <p class="work-cat">SNS Design</p>
+        <h3 class="work-title">Instagram フィード<br>デザイン</h3>
+      </div>
+    </div>
+    <div class="work-item reveal" style="transition-delay:0.2s">
+      <div class="work-bg work-pattern-3"></div>
+      <div class="work-number">03</div>
+      <div class="work-info">
+        <p class="work-cat">Video Edit</p>
+        <h3 class="work-title">TikTok リール<br>動画編集</h3>
+      </div>
+    </div>
+    <div class="work-item reveal" style="transition-delay:0.3s">
+      <div class="work-bg work-pattern-4"></div>
+      <div class="work-number">04</div>
+      <div class="work-info">
+        <p class="work-cat">Content Planning</p>
+        <h3 class="work-title">SNS コンテンツ<br>企画 &amp; 運用</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Platforms strip -->
+<div class="platforms-strip reveal">
+  <span class="platforms-label">Platforms</span>
+  <div class="platform-list">
+    <span class="platform-item">Instagram</span>
+    <span class="platform-item">TikTok</span>
+    <span class="platform-item">X / Twitter</span>
+  </div>
+</div>
+
+<!-- About -->
+<section id="about">
+  <div class="reveal">
+    <h2 class="about-heading">ABOUT<br><em>ME.</em></h2>
+  </div>
+  <div class="reveal" style="transition-delay:0.15s">
+    <p class="about-body">
+      SNSクリエイターとして、ブランドのビジョンをビジュアルとコンテンツで表現してきました。<br><br>
+      ビジュアルデザインから動画編集、コンテンツ企画まで、一貫したブランド体験を届けることが得意です。
+    </p>
+    <div class="about-skills">
+      <span class="skill-tag">SNS Visual Design</span>
+      <span class="skill-tag">Content Planning</span>
+      <span class="skill-tag">Video Editing</span>
+      <span class="skill-tag">Brand Strategy</span>
+      <span class="skill-tag">Copywriting</span>
+      <span class="skill-tag">Instagram</span>
+      <span class="skill-tag">TikTok</span>
+      <span class="skill-tag">X / Twitter</span>
+    <div style="margin-top:40px">
+      <a href="#" onclick="showPage('about');return false;" class="liquid-btn" id="aboutMoreBtn" style="width:180px;height:46px">
+        <canvas class="liquid-canvas" id="aboutMoreCanvas"></canvas>
+        <span class="liquid-inner"></span>
+        <span class="liquid-label">View More →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <h2 class="contact-heading reveal">
+    LET'S<br><span>WORK</span><br>TOGETHER.
+  </h2>
+  <p class="contact-sub reveal" style="transition-delay:0.1s">
+    お仕事のご依頼・コラボレーションのご相談は<br>お気軽にお問い合わせください。
+  </p>
+  <a href="/cdn-cgi/l/email-protection#1c6573696e5c79717d7570327f7371" class="liquid-btn liquid-btn-lg reveal" id="contactBtn" style="transition-delay:0.2s">
+    <canvas class="liquid-canvas" id="contactBtnCanvas"></canvas>
+    <span class="liquid-inner"></span>
+    <span class="liquid-label">Get in Touch →</span>
+  </a>
+</section>
+
+</div><!-- end home-page -->
+
+<div id="about-page">
+<div class="v-line"></div><div class="v-line"></div><div class="v-line"></div>
+<div class="page">
+
+  <!-- HERO -->
+  <section class="about-hero">
+    <div class="about-hero-left">
+      <p class="about-eyebrow">About Me</p>
+      <h1 class="about-title">JENNY<br><em>包家蓁.</em></h1>
+    </div>
+    <div class="about-hero-right">
+      <div class="photo-wrap">
+        <div class="photo-circle">
+          <img src="data:image/jpeg;base64,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" alt="Jenny" class="photo-img"/>
+        </div>
+        <div>
+          <p class="photo-name">JENNY</p>
+          <p class="photo-name-ja">SNS Creator &amp; Brand Planner</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="section-intro">
+    <div class="section-tag reveal">Profile</div>
+    <div class="reveal" style="transition-delay:0.1s">
+      <p class="intro-body">
+        台湾出身。東京を拠点に、デザインと企画を通して<strong>「人とブランドのつながり」</strong>を形にしてきました。<br><br>
+        日常にある小さな感情や気づきを、共感につながる体験へと翻訳することを大切にしています。
+      </p>
+      <div class="intro-name-block">
+        <div>
+          <p class="intro-name-cn">包家蓁</p>
+          <p class="intro-name-en">Jenny / ジェニ</p>
+          <p class="intro-origin">台湾出身 → 東京在住</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRENGTH -->
+  <section class="section-strength">
+    <div class="strength-header">
+      <div class="reveal"><h2 class="strength-title">WHAT<br>I<br><em>DO.</em></h2></div>
+      <div class="reveal" style="transition-delay:0.1s">
+        <p class="strength-lead">技術だけでなく、<strong style="color:var(--white)">企画統合力</strong>が最大の強みです。<br>分析・論理思考・プロジェクト進行まで、ブランドの課題を一気通貫で解決します。</p>
+      </div>
+    </div>
+    <div class="strength-cards">
+      <div class="strength-card reveal">
+        <p class="strength-num">01</p>
+        <h3 class="strength-card-title">企画統合力</h3>
+        <p class="strength-card-body">単なるスキル保有者ではなく、分析・論理思考・プロジェクト管理まで一貫して担える統合型クリエイター。代替不可能な視点でブランドを動かします。</p>
+      </div>
+      <div class="strength-card reveal" style="transition-delay:0.1s">
+        <p class="strength-num">02</p>
+        <h3 class="strength-card-title">ビジュアル × コンテンツ制作</h3>
+        <p class="strength-card-body">デザインから動画編集、コピーライティングまで。ブランドの世界観を一貫したトーンでSNS上に表現します。</p>
+      </div>
+      <div class="strength-card reveal" style="transition-delay:0.2s">
+        <p class="strength-num">03</p>
+        <h3 class="strength-card-title">クロスボーダー対応</h3>
+        <p class="strength-card-body">中文・日本語・英語の3言語対応。台湾・日本・グローバル市場を見据えたブランドコミュニケーションが可能です。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section-skills">
+    <div class="skills-grid">
+      <div class="reveal"><p class="section-tag" style="margin-bottom:0">Skills &amp; Tools</p></div>
+      <div class="skills-categories reveal" style="transition-delay:0.1s">
+        <div class="skill-cat">
+          <p class="skill-cat-label">Design / Visual</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Illustrator</span><span class="skill-tag">Photoshop</span>
+            <span class="skill-tag">InDesign</span><span class="skill-tag">Premiere Pro</span>
+            <span class="skill-tag">Figma</span><span class="skill-tag">Canva</span><span class="skill-tag">CapCut</span>
+          </div>
+        </div>
+        <div class="skill-cat">
+          <p class="skill-cat-label">Content &amp; SNS</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Instagram</span><span class="skill-tag">Reels</span>
+            <span class="skill-tag">TikTok</span><span class="skill-tag">X / Twitter</span>
+            <span class="skill-tag">コンテンツ企画</span><span class="skill-tag">脚本制作</span><span class="skill-tag">コピーライティング</span>
+          </div>
+        </div>
+        <div class="skill-cat">
+          <p class="skill-cat-label">Project / Communication</p>
+          <div class="skill-tags">
+            <span class="skill-tag">コラボ企画進行管理</span><span class="skill-tag">KOL折衝</span>
+            <span class="skill-tag">社外パートナー対応</span><span class="skill-tag">チーム連携</span>
+          </div>
+        </div>
+        <div class="skill-cat">
+          <p class="skill-cat-label">Languages</p>
+          <div class="lang-pills">
+            <span class="lang-pill">中文</span><span class="lang-pill">日本語</span><span class="lang-pill">English</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERESTS -->
+  <section class="section-interests">
+    <div class="interests-header">
+      <div class="reveal"><p class="section-tag" style="margin-bottom:0">Interests</p></div>
+      <div class="reveal" style="transition-delay:0.1s"><p class="strength-lead">仕事の外にあるものが、クリエイティブの源になっています。</p></div>
+    </div>
+    <div class="interests-grid">
+      <div class="interest-block reveal">
+        <p class="interest-block-label">Outdoor</p>
+        <div class="interest-items">
+          <span class="interest-item">⚾ 野球観戦</span><span class="interest-item">🧘 ヨガ</span>
+          <span class="interest-item">🏃 ピラティス</span><span class="interest-item">🏃 ランニング</span>
+          <span class="interest-item">☕ カフェ巡り</span><span class="interest-item">✈️ 旅行</span>
+          <span class="interest-item">🍽️ コース料理</span><span class="interest-item">🍷 ワイン</span>
+        </div>
+      </div>
+      <div class="interest-block reveal" style="transition-delay:0.1s">
+        <p class="interest-block-label">Indoor</p>
+        <div class="interest-items">
+          <span class="interest-item">📚 読書</span><span class="interest-item">🕯️ 香り・アロマ</span>
+          <span class="interest-item">🤖 AI研究</span><span class="interest-item">🎙️ Podcast</span>
+          <span class="interest-item">🎬 Netflix</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SNS -->
+  <section class="section-sns">
+    <h2 class="sns-heading reveal">FIND ME<br><span>ON SNS</span></h2>
+    <p class="sns-sub reveal" style="transition-delay:0.1s">フォローしてね</p>
+    <div class="sns-links reveal" style="transition-delay:0.2s">
+      <a href="https://www.instagram.com/jennybaooo7_" target="_blank" class="sns-btn">
+        <svg class="sns-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Instagram
+      </a>
+      <a href="https://www.threads.com/@jennybaooo7_" target="_blank" class="sns-btn">
+        <svg class="sns-icon" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.852 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.282 2.65Z"/></svg>
+        Threads
+      </a>
+      <a href="https://xhslink.com/m/6SPqfhg96uh" target="_blank" class="sns-btn">
+        <svg class="sns-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" font-size="10" fill="white" font-weight="bold">RED</text></svg>
+        小紅書
+      </a>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-cta">
+    <p class="cta-label reveal">お仕事のご依頼</p>
+    <h2 class="cta-heading reveal" style="transition-delay:0.1s">LET'S<br><span>WORK</span><br>TOGETHER.</h2>
+    <a href="/cdn-cgi/l/email-protection#abd2c4ded9ebcec6cac2c785c8c4c6" class="liquid-btn liquid-btn-lg reveal" id="ctaBtn" style="transition-delay:0.2s">
+      <canvas class="liquid-canvas" id="ctaBtnCanvas"></canvas>
+      <span class="liquid-inner"></span>
+      <span class="liquid-label">Get in Touch →</span>
+    </a>
+  </section>
+
+</div>
+<footer>
+  <span class="footer-copy">© 2025 Jenny. All rights reserved.</span>
+  <button class="footer-back" onclick="showPage('home')" style="cursor:none;">← Back to Home</button>
+</footer>
+</div><!-- end about-page -->
+
+<!-- ══════════════════════════════════════
+     Career Page
+═══════════════════════════════════════ -->
+<div id="career-page">
+<div class="v-line"></div><div class="v-line"></div><div class="v-line"></div>
+<div class="page">
+
+  <!-- Hero -->
+  <section class="career-hero">
+    <p class="career-eyebrow">Career History</p>
+    <h1 class="career-title">CAREER<br><em>PATH.</em></h1>
+    <p class="career-lead">
+      台湾出身。デザイナーとして 2021 年よりキャリアをスタートし、<br>
+      BEAMS Taiwan での SNS プランニング・マーケティングを経て、<br>
+      現在は Chief Planner としてブランド戦略の上流から携わる。
+    </p>
+  </section>
+
+  <!-- Stats -->
+  <div class="career-stats">
+    <div class="stat-block reveal">
+      <p class="stat-num">5<sup>+</sup></p>
+      <p class="stat-label">Years of Experience</p>
+    </div>
+    <div class="stat-block reveal" style="transition-delay:0.1s">
+      <p class="stat-num">2,000</p>
+      <p class="stat-label">Followers in 1 Month</p>
+    </div>
+    <div class="stat-block reveal" style="transition-delay:0.2s">
+      <p class="stat-num">5,000<sup>+</sup></p>
+      <p class="stat-label">Threads Likes in 1 Day</p>
+    </div>
+    <div class="stat-block reveal" style="transition-delay:0.3s">
+      <p class="stat-num">50</p>
+      <p class="stat-label">New VIP Customers</p>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <section class="timeline-section">
+    <div class="timeline-header">
+      <div class="section-tag">Experience</div>
+      <p style="font-family:'Shippori Mincho',serif;font-size:15px;line-height:2.3;color:var(--light-gray);">
+        接客現場の声・データ・企画を結びつけ、<br>
+        一つの視点にとらわれない思考力でブランドの SNS を動かしてきました。
+      </p>
+    </div>
+
+    <div class="timeline">
+
+      <!-- Item 01 — Current -->
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <p class="timeline-period"><span class="timeline-period-line"></span>2026 — Present</p>
+        <h3 class="timeline-company">Chief Planner</h3>
+        <p class="timeline-role">Chief Planner</p>
+        <p class="timeline-desc">
+          これまでのデザイン・SNS マーケティング・データ分析の経験を統合し、ブランドの上流から戦略設計に携わる。コンテンツ企画・クリエイティブ制作・施策の PDCA まで、一気通貫でプランニングを担当。
+        </p>
+        <div class="timeline-tags">
+          <span class="timeline-tag">Brand Planning</span>
+          <span class="timeline-tag">Strategy</span>
+          <span class="timeline-tag">PDCA</span>
+          <span class="timeline-tag">Creative Direction</span>
+        </div>
+      </div>
+
+      <!-- Item 02 — BEAMS -->
+      <div class="timeline-item reveal" style="transition-delay:0.12s">
+        <div class="timeline-dot"></div>
+        <p class="timeline-period"><span class="timeline-period-line"></span>2022 — 2024</p>
+        <h3 class="timeline-company">BEAMS Taiwan</h3>
+        <p class="timeline-role">SNS Planner &amp; Marketer</p>
+        <p class="timeline-desc">
+          新都市への 3 店舗同時出店に伴い、ローカル SNS アカウント（beams_lalaport_taiwan）を新規立ち上げ。投稿企画・動画編集・ライブ配信・データ分析を担当し、POP UP 施策の SNS プロモーションや他ブランドとの調整・現場運営・PR も幅広く対応。<br><br>
+          日本の BEAMS 各店舗アカウントの成功事例を分析し、接客現場でのお客様の声を収集。"スター店員" 企画と Threads 活用により、<strong style="color:var(--white)">1 日で約 5,000 いいね・IG フォロワーを当日中に約 1,000 人増加</strong>。開設 1 ヶ月で 2,000 フォロワー達成・新規 VIP 顧客 50 名獲得など、前月比で大きく成果を伸ばした。
+        </p>
+        <div class="timeline-tags">
+          <span class="timeline-tag">SNS 企画・運用</span>
+          <span class="timeline-tag">動画編集</span>
+          <span class="timeline-tag">ライブ配信</span>
+          <span class="timeline-tag">データ分析</span>
+          <span class="timeline-tag">POP UP PR</span>
+          <span class="timeline-tag">イベント連携</span>
+          <span class="timeline-tag">Threads</span>
+        </div>
+      </div>
+
+      <!-- Item 03 — Designer -->
+      <div class="timeline-item reveal" style="transition-delay:0.24s">
+        <div class="timeline-dot"></div>
+        <p class="timeline-period"><span class="timeline-period-line"></span>2021 — Present</p>
+        <h3 class="timeline-company">Designer</h3>
+        <p class="timeline-role">Visual Designer</p>
+        <p class="timeline-desc">
+          ビジュアルデザイナーとして、ブランドのビジュアルアイデンティティ・SNS グラフィック・コンテンツ制作に携わる。お客様との直接的なコミュニケーションから得たリアルな声を、デザインおよびSNS マーケティング施策に反映し続けている。未経験な業務でも短期間でキャッチアップできる適応力が強み。
+        </p>
+        <div class="timeline-tags">
+          <span class="timeline-tag">Visual Design</span>
+          <span class="timeline-tag">SNS Graphics</span>
+          <span class="timeline-tag">Content Creation</span>
+          <span class="timeline-tag">Brand Identity</span>
+        </div>
+      </div>
+
+    </div><!-- /.timeline -->
+  </section><!-- /.timeline-section -->
+
+  <!-- CTA -->
+  <section class="section-cta">
+    <p class="cta-label reveal">お仕事のご依頼</p>
+    <h2 class="cta-heading reveal" style="transition-delay:0.1s">LET'S<br><span>WORK</span><br>TOGETHER.</h2>
+    <a href="mailto:a0979019538@gmail.com" class="liquid-btn liquid-btn-lg reveal" id="careerCtaBtn" style="transition-delay:0.2s">
+      <canvas class="liquid-canvas" id="careerCtaBtnCanvas"></canvas>
+      <span class="liquid-inner"></span>
+      <span class="liquid-label">Get in Touch →</span>
+    </a>
+  </section>
+
+</div><!-- /.page -->
+<footer>
+  <span class="footer-copy">© 2025 Jenny. All rights reserved.</span>
+  <button class="footer-back" onclick="showPage('home')" style="cursor:none;">← Back to Home</button>
+</footer>
+</div><!-- end career-page -->
+
+<div id="beams-page">
+<div class="v-line"></div><div class="v-line"></div><div class="v-line"></div>
+<div class="page">
+
+  <!-- IMG ① Hero Full-width Image -->
+  <div class="bp-hero-img-wrap">
+    <img src="beams-01.jpg" alt="hütte × BEAMS コラボ — 植物バッグビジュアル"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+    <div class="bp-hero-img-placeholder" style="display:none;">
+      <span class="ph-num">IMG ①</span>
+      <span style="font-size:10px;letter-spacing:0.15em;">hütte × BEAMS — Hero Visual</span>
+    </div>
+  </div>
+
+  <!-- Hero Text + Meta -->
+  <div class="bp-hero">
+    <div>
+      <span class="bp-hero-label">Works / Case Study — 01</span>
+      <h1 class="bp-hero-title">BEAMS<br>TAIWAN</h1>
+      <p class="bp-hero-sub">SNS Account Launch</p>
+    </div>
+    <div class="bp-meta">
+      <div class="bp-meta-item">
+        <div class="bp-meta-label">Client</div>
+        <div class="bp-meta-value">BEAMS Taiwan（3店舗）</div>
+      </div>
+      <div class="bp-meta-item">
+        <div class="bp-meta-label">Category</div>
+        <div class="bp-meta-value">Social Media Strategy<br>Content Production</div>
+      </div>
+      <div class="bp-meta-item">
+        <div class="bp-meta-label">Tools</div>
+        <div class="bp-meta-value">CapCut / Instagram / Threads</div>
+      </div>
+      <div class="bp-meta-item">
+        <div class="bp-meta-label">Period</div>
+        <div class="bp-meta-value">2022 – 2024</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="bp-divider">
+
+  <!-- Stats Strip -->
+  <div class="bp-stats reveal">
+    <div class="bp-stat">
+      <span class="bp-stat-num">2,000</span>
+      <span class="bp-stat-label">フォロワー獲得<br>開設1ヶ月</span>
+    </div>
+    <div class="bp-stat">
+      <span class="bp-stat-num">5K+</span>
+      <span class="bp-stat-label">Threads<br>1日のいいね数</span>
+    </div>
+    <div class="bp-stat">
+      <span class="bp-stat-num">100K</span>
+      <span class="bp-stat-label">Reel最高<br>再生数</span>
+    </div>
+    <div class="bp-stat">
+      <span class="bp-stat-num">50</span>
+      <span class="bp-stat-label">VIP顧客<br>新規獲得</span>
+    </div>
+  </div>
+
+  <hr class="bp-divider">
+
+  <!-- 01 Background -->
+  <div class="bp-section reveal">
+    <div class="bp-section-hd">
+      <span class="bp-section-num">01</span>
+      <div>
+        <div class="bp-section-en">BACKGROUND</div>
+        <span class="bp-section-ja">背景</span>
+      </div>
+    </div>
+    <div class="bp-two-col">
+      <div class="bp-body">
+        <p>BEAMSは日本を代表するセレクトショップブランド。2023年、台湾に3店舗を同時出店し、台湾市場においてローカライズされたSNSプレゼンスの確立が求められた。</p>
+        <p>台湾市場は日本文化への親近感が高い一方、BEAMSのブランド認知度は現地ではまだ限定的。ゼロから台湾の消費者と本当の意味で対話できるSNSアカウントを立ち上げ、ロイヤルなローカルコミュニティを育てることが使命だった。</p>
+      </div>
+      <div>
+        <!-- IMG ② Account grid screenshot -->
+        <img class="bp-img landscape" src="beams-02.png" alt="BEAMS Taiwan IGアカウント グリッド"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="bp-img-ph landscape" style="display:none;">
+          <span class="ph-num">IMG ②</span>
+          <span>IGアカウント<br>グリッドスクリーンショット</span>
+        </div>
+        <p class="bp-img-caption">@beams_lalaport_taiwan — アカウント全体像</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="bp-divider">
+
+  <!-- 02 Challenge -->
+  <div class="bp-section reveal">
+    <div class="bp-section-hd">
+      <span class="bp-section-num">02</span>
+      <div>
+        <div class="bp-section-en">CHALLENGE</div>
+        <span class="bp-section-ja">課題</span>
+      </div>
+    </div>
+    <div class="bp-body">
+      <ul>
+        <li>新規アカウント・フォロワーゼロからのスタート。参照できる過去データも存在しない</li>
+        <li>3店舗のSNSを同時管理しながら、各店の個性を保ちつつブランドの一貫性を維持する</li>
+        <li>日本語のブランドランゲージを台湾消費者に響く中国語表現へとクロスランゲージで転換する</li>
+        <li>台湾のBEAMS認知度は低く、「ブランド紹介」と「コミュニティ形成」を同時進行する必要があった</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="bp-divider">
+
+  <!-- 03 Strategy -->
+  <div class="bp-section reveal">
+    <div class="bp-section-hd">
+      <span class="bp-section-num">03</span>
+      <div>
+        <div class="bp-section-en">STRATEGY</div>
+        <span class="bp-section-ja">戦略</span>
+      </div>
+    </div>
+    <div class="bp-two-col">
+      <div>
+        <div class="bp-body">
+          <p>日本BEAMS各店舗の成功アカウントを体系的に分析し、再現可能な成功パターンを抽出。それを台湾市場向けにカスタマイズした。</p>
+          <p>最大の差別化施策が「スター店員」戦略。店員をブランドのパーソナルな発信者として位置づけ、彼らの視点からコンテンツを届けることで大手ブランドの距離感を解消した。</p>
+          <p>また、Threadsが台湾で立ち上がったタイミングをいち早く捉え、競合参入前にポジションを確立。低コストで大量露出を獲得した。</p>
+        </div>
+        <div class="bp-stags">
+          <span class="bp-stag">日本事例分析</span>
+          <span class="bp-stag">スター店員戦略</span>
+          <span class="bp-stag">Threads先行布陣</span>
+          <span class="bp-stag">多言語対応</span>
+        </div>
+      </div>
+      <div>
+        <!-- IMG ③ TAICHUNG STAFF: FUN -->
+        <img class="bp-img portrait" src="beams-03.png" alt="TAICHUNG STAFF: FUN 投稿"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="bp-img-ph portrait" style="display:none;">
+          <span class="ph-num">IMG ③</span>
+          <span>「TAICHUNG STAFF: FUN」<br>スター店員コンテンツ</span>
+        </div>
+        <p class="bp-img-caption">スター店員コンテンツの例 — BEAMS STAFF RECOMMENDS</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="bp-divider">
+
+  <!-- 04 Execution -->
+  <div class="bp-section reveal">
+    <div class="bp-section-hd">
+      <span class="bp-section-num">04</span>
+      <div>
+        <div class="bp-section-en">EXECUTION</div>
+        <span class="bp-section-ja">実行</span>
+      </div>
+    </div>
+
+    <!-- IMG ④ ikuikustudio POP UP -->
+    <div style="margin-bottom:48px;">
+      <img class="bp-img landscape" src="beams-04.png" alt="ikuikustudio × BEAMS POP UP Reel"
+           style="max-width:640px;"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="bp-img-ph landscape" style="display:none;max-width:640px;">
+        <span class="ph-num">IMG ④</span>
+        <span>ikuikustudio × BEAMS POP UP<br>コラボイベントReel（211いいね）</span>
+      </div>
+      <p class="bp-img-caption">クロスブランドコラボの一例 — @ikuikustudio × @beams_lalaport_taiwan</p>
+    </div>
+
+    <div class="bp-body">
+      <ul>
+        <li>全SNSコンテンツの企画・コピーライティング・撮影・動画編集まで一括対応</li>
+        <li>複数プラットフォーム向けのマルチランゲージコンテンツを毎週安定的にアウトプット</li>
+        <li>POP UPイベントのSNS告知から現場のリアルタイム記録・ライブ・ポスト編集まで担当</li>
+        <li>他ブランドとのコラボ提案・調整をリードし、新規オーディエンスへのリーチを拡大</li>
+      </ul>
+    </div>
+
+    <!-- Reel cards -->
+    <div style="margin-top:56px;">
+      <p style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray);margin-bottom:24px;">制作Reel — Watch on Instagram</p>
+      <div class="bp-reel-grid">
+        <a class="bp-reel-card" href="https://www.instagram.com/reel/C6q5g9_xu70/?igsh=MTVtZWN0aGxvNXgwdw==" target="_blank" rel="noopener">
+          <div class="bp-reel-thumb">
+            <div class="bp-reel-play"></div>
+          </div>
+          <div class="bp-reel-info">
+            <span class="bp-reel-tag">Instagram Reel — 01</span>
+            <p class="bp-reel-title">コラボイベント告知<br>アーティストコラボPR動画</p>
+            <div class="bp-reel-stat">
+              <span>Avg. <span>20,000</span> 再生</span>
+              <span>Max <span>100,000</span> 再生</span>
+            </div>
+          </div>
+        </a>
+        <a class="bp-reel-card" href="https://www.instagram.com/reel/C7nmQO6tsB0/?igsh=ODJjc3NtMDB6dTh2" target="_blank" rel="noopener">
+          <div class="bp-reel-thumb">
+            <div class="bp-reel-play"></div>
+          </div>
+          <div class="bp-reel-info">
+            <span class="bp-reel-tag">Instagram Reel — 02</span>
+            <p class="bp-reel-title">コラボ商品PR<br>ブランドコラボレーション動画</p>
+            <div class="bp-reel-stat">
+              <span>Avg. <span>20,000</span> 再生</span>
+              <span>1投稿 <span>100〜200</span> 新規フォロワー</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <hr class="bp-divider">
+
+  <!-- 05 Results -->
+  <div class="bp-section reveal">
+    <div class="bp-section-hd">
+      <span class="bp-section-num">05</span>
+      <div>
+        <div class="bp-section-en">RESULTS</div>
+        <span class="bp-section-ja">成果</span>
+      </div>
+    </div>
+    <div class="bp-two-col">
+      <div class="bp-body">
+        <p>フォロワー1,000人未満のアカウントながら、Reelの平均再生数2万回・最大10万回を記録。1投稿あたり100〜200名の新規フォロワー獲得に継続的に貢献した。</p>
+        <p>「スター店員」コンテンツはブランド差別化の核となり、他の競合が容易に模倣できないコミュニティの温度感を構築。その後のクロスブランドコラボやイベント企画のための強固なSNS基盤となった。</p>
+      </div>
+      <div class="bp-results-grid">
+        <div class="bp-result-box">
+          <div class="bp-result-num">2,000</div>
+          <div class="bp-result-label">フォロワー / 開設1ヶ月</div>
+        </div>
+        <div class="bp-result-box">
+          <div class="bp-result-num">+1,000</div>
+          <div class="bp-result-label">IG フォロワー / 1日</div>
+        </div>
+        <div class="bp-result-box">
+          <div class="bp-result-num">5,000+</div>
+          <div class="bp-result-label">Threads いいね / 1日</div>
+        </div>
+        <div class="bp-result-box">
+          <div class="bp-result-num">50</div>
+          <div class="bp-result-label">VIP顧客 / 新規獲得</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="bp-cta reveal">
+    <div>
+      <h2 class="bp-cta-title">NEXT PROJECT<br>IS YOURS.</h2>
+      <p class="bp-cta-sub">一緒に作りましょう。</p>
+    </div>
+    <div class="bp-cta-links">
+      <a class="bp-btn" href="mailto:a0979019538@gmail.com">Get In Touch</a>
+      <button class="bp-btn-ghost" onclick="showPage('home')">← Back to Works</button>
+    </div>
+  </div>
+
+</div><!-- end page -->
+<footer>
+  <span class="footer-copy">© 2025 Jenny. All rights reserved.</span>
+  <button class="footer-back" onclick="showPage('home')" style="cursor:none;">← Back to Home</button>
+</footer>
+</div><!-- end beams-page -->
+
+<!-- Footer -->
+<footer>
+  <span class="footer-copy">© 2025 Jenny. All rights reserved.</span>
+  <div class="footer-lang">
+    <button class="lang-btn active">JA</button>
+    <button class="lang-btn">ZH</button>
+    <button class="lang-btn">EN</button>
+  </div>
+</footer>
+
+<script>
+  // Loader
+  function hideLoader() {
+    setTimeout(() => { document.getElementById('loader').classList.add('hidden'); }, 1400);
+  }
+  if (document.readyState === 'complete') { hideLoader(); }
+  else { window.addEventListener('load', hideLoader); document.addEventListener('DOMContentLoaded', hideLoader); }
+
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Lang switcher
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querrySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Liquid Metal Button
+  function initLiquidBtn(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const btn = canvas.parentElement;
+    let w, h, t = Math.random() * 100;
+    function resize() {
+      const rect = btn.getBoundingClientRect();
+      w = canvas.width = rect.width * devicePixelRatio;
+      h = canvas.height = rect.height * devicePixelRatio;
+      canvas.style.width = rect.width+'px'; canvas.style.height = rect.height+'px';
+    }
+    function noise(x,y,t){ return (Math.sin(x*2.1+t*0.7)*Math.cos(y*1.8-t*0.5)+Math.sin(x*3.7-t*0.4)*Math.cos(y*2.9+t*0.6)+Math.sin((x+y)*1.5+t*0.9)*0.5)/2.5; }
+    function draw(){
+      t+=0.012; ctx.clearRect(0,0,w,h);
+      const cols=40,rows=14,cw=w/cols,ch=h/rows;
+      for(let i=0;i<=cols;i++) for(let j=0;j<=rows;j++){
+        const n=noise(i/cols*4,j/rows*4,t);
+        const bright=Math.floor(((n+1)/2)*180+60), alpha=((n+1)/2)*0.85+0.1;
+        ctx.fillStyle=`rgba(${bright},${bright},${bright},${alpha})`;
+        ctx.beginPath(); ctx.arc(i*cw,j*ch,cw*0.38,0,Math.PI*2); ctx.fill();
+      }
+      const sweep=(Math.sin(t*0.6)+1)/2;
+      const grad=ctx.createLinearGradient(sweep*w-w*0.4,0,sweep*w+w*0.4,h);
+      grad.addColorStop(0,'rgba(255,255,255,0)'); grad.addColorStop(0.4,'rgba(255,255,255,0.18)');
+      grad.addColorStop(0.5,'rgba(255,255,255,0.32)'); grad.addColorStop(0.6,'rgba(255,255,255,0.18)');
+      grad.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=grad; ctx.fillRect(0,0,w,h);
+      requestAnimationFrame(draw);
+    }
+    resize(); draw(); window.addEventListener('resize',resize);
+  }
+
+  // Page switching
+  function showPage(page) {
+    document.body.classList.remove('show-about', 'show-career', 'show-beams');
+    window.scrollTo(0, 0);
+
+    if (page === 'about') {
+      document.body.classList.add('show-about');
+      setTimeout(() => {
+        initLiquidBtn('ctaBtnCanvas');
+        document.querySelectorAll('#about-page .reveal').forEach(el => {
+          const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+          }, { threshold: 0.1 });
+          obs.observe(el);
+        });
+      }, 300);
+
+    } else if (page === 'career') {
+      document.body.classList.add('show-career');
+      setTimeout(() => {
+        initLiquidBtn('careerCtaBtnCanvas');
+        document.querySelectorAll('#career-page .reveal').forEach(el => {
+          el.classList.remove('visible');
+          const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+          }, { threshold: 0.1 });
+          obs.observe(el);
+        });
+      }, 300);
+
+    } else if (page === 'beams') {
+      document.body.classList.add('show-beams');
+      setTimeout(() => {
+        initLiquidBtn('beamsCtaBtnCanvas');
+        document.querySelectorAll('#beams-page .reveal').forEach(el => {
+          el.classList.remove('visible');
+          const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+          }, { threshold: 0.1 });
+          obs.observe(el);
+        });
+      }, 300);
+    }
+    // page === 'home' → classes already removed above, nothing more needed
+  }
+
+  setTimeout(()=>{
+    initLiquidBtn('heroBtnCanvas');
+    initLiquidBtn('contactBtnCanvas');
+    initLiquidBtn('aboutMoreCanvas');
+  }, 300);
+
+  // Lang switcher
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+</script>
+</body>
+</html>
