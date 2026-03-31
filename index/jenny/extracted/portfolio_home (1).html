@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JENNY — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f4f2ee;
+    --gray: #888;
+    --light-gray: #d0cdc8;
+    --accent: #f4f2ee;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--white);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(244,242,238,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* Loader */
+  #loader {
+    position: fixed; inset: 0;
+    background: var(--black);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease;
+  }
+  #loader.hidden { opacity: 0; pointer-events: none; }
+  .loader-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 10vw, 120px);
+    letter-spacing: 0.15em;
+    overflow: hidden;
+  }
+  .loader-text span {
+    display: inline-block;
+    animation: loaderReveal 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+    transform: translateY(110%);
+  }
+  @keyframes loaderReveal {
+    to { transform: translateY(0); }
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 48px;
+    mix-blend-mode: difference;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 1.8s forwards;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.2em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    position: relative;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0;
+    width: 0; height: 1px;
+    background: var(--white);
+    transition: width 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .nav-links a:hover { opacity: 1; }
+  .nav-links a:hover::after { width: 100%; }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* Hero */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Grain texture overlay */
+  #hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  /* Vertical line decoration */
+  .v-line {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: rgba(244,242,238,0.06);
+  }
+  .v-line:nth-child(1) { left: 25%; }
+  .v-line:nth-child(2) { left: 50%; }
+  .v-line:nth-child(3) { left: 75%; }
+
+  .hero-content { position: relative; z-index: 2; }
+
+  /* Rolling text ticker */
+  .ticker-wrap {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    overflow: hidden;
+    opacity: 0.06;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .ticker {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker 20s linear infinite;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 14vw, 180px);
+    letter-spacing: 0.05em;
+    color: var(--white);
+  }
+  .ticker span { padding-right: 60px; }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Main headline */
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: slideUp 0.8s cubic-bezier(0.16,1,0.3,1) 1.6s forwards;
+  }
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 14vw, 180px);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .hero-name .line {
+    display: block;
+    overflow: hidden;
+  }
+  .hero-name .line span {
+    display: block;
+    transform: translateY(110%);
+    animation: slideUp2 1s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .hero-name .line:nth-child(1) span { animation-delay: 1.7s; }
+  .hero-name .line:nth-child(2) span { animation-delay: 1.85s; }
+
+  @keyframes slideUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp2 {
+    to { transform: translateY(0); }
+  }
+
+  /* Rotating role badge */
+  .role-rotator {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 2.3s forwards;
+  }
+  .role-dot {
+    width: 6px; height: 6px;
+    background: var(--white);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  .role-text {
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--light-gray);
+    overflow: hidden;
+    height: 20px;
+  }
+  .role-text .role-inner {
+    display: flex;
+    flex-direction: column;
+    animation: roleScroll 6s cubic-bezier(0.4,0,0.2,1) infinite;
+  }
+  .role-text .role-inner span {
+    height: 20px;
+    line-height: 20px;
+    display: block;
+  }
+  @keyframes roleScroll {
+    0%,20%   { transform: translateY(0); }
+    25%,45%  { transform: translateY(-20px); }
+    50%,70%  { transform: translateY(-40px); }
+    75%,95%  { transform: translateY(-60px); }
+    100%     { transform: translateY(0); }
+  }
+
+  /* Hero bottom row */
+  .hero-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 2.5s forwards;
+  }
+  .hero-desc {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    line-height: 2;
+    color: var(--light-gray);
+    max-width: 320px;
+  }
+  .hero-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    border: 1px solid rgba(244,242,238,0.3);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: border-color 0.3s, background 0.3s, color 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--white);
+    transform: translateX(-101%);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    z-index: -1;
+  }
+  .cta-btn:hover { color: var(--black); border-color: var(--white); }
+  .cta-btn:hover::before { transform: translateX(0); }
+  .cta-arrow { font-size: 16px; transition: transform 0.3s; }
+  .cta-btn:hover .cta-arrow { transform: translateX(4px); }
+  .scroll-hint {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gray);
+    text-transform: uppercase;
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 3s forwards;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, rgba(244,242,238,0.5), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+  .scroll-text {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--gray);
+    text-transform: uppercase;
+  }
+
+  /* Works section */
+  #works {
+    padding: 120px 48px;
+    position: relative;
+  }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 64px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gray);
+  }
+
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+  .work-item {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: #111;
+    cursor: none;
+  }
+  .work-item:first-child {
+    grid-row: span 2;
+    aspect-ratio: auto;
+  }
+  .work-bg {
+    position: absolute; inset: 0;
+    background: #1a1a1a;
+    transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .work-item:hover .work-bg { transform: scale(1.04); }
+
+  .work-number {
+    position: absolute;
+    top: 24px; left: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--gray);
+    z-index: 2;
+  }
+  .work-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 32px 28px;
+    background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 100%);
+    z-index: 2;
+    transform: translateY(8px);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .work-item:hover .work-info { transform: translateY(0); }
+  .work-cat {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .work-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  /* Placeholder patterns for work items */
+  .work-pattern-1 { background: repeating-linear-gradient(45deg, #111, #111 2px, #161616 2px, #161616 12px); }
+  .work-pattern-2 { background: repeating-linear-gradient(-45deg, #111, #111 2px, #181818 2px, #181818 8px); }
+  .work-pattern-3 { background: radial-gradient(circle at 30% 70%, #1e1e1e 0%, #111 60%); }
+  .work-pattern-4 { background: repeating-linear-gradient(90deg, #111, #111 3px, #161616 3px, #161616 16px); }
+
+  /* About strip */
+  #about {
+    padding: 120px 48px;
+    border-top: 1px solid rgba(244,242,238,0.08);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+  }
+  .about-heading em {
+    font-style: normal;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--white);
+  }
+  .about-body {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    line-height: 2.2;
+    color: var(--light-gray);
+  }
+  .about-skills {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .skill-tag {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid rgba(244,242,238,0.2);
+    padding: 6px 14px;
+    color: var(--light-gray);
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .skill-tag:hover { border-color: var(--white); color: var(--white); }
+
+  /* Platforms strip */
+  .platforms-strip {
+    padding: 40px 48px;
+    border-top: 1px solid rgba(244,242,238,0.08);
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .platforms-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--gray);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .platform-list {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+  .platform-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.15em;
+    color: rgba(244,242,238,0.25);
+    transition: color 0.3s;
+  }
+  .platform-item:hover { color: var(--white); }
+
+  /* Contact */
+  #contact {
+    padding: 120px 48px;
+    border-top: 1px solid rgba(244,242,238,0.08);
+    text-align: center;
+  }
+  .contact-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 140px);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    margin-bottom: 48px;
+  }
+  .contact-heading span {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(244,242,238,0.4);
+  }
+  .contact-sub {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    color: var(--gray);
+    margin-bottom: 48px;
+    line-height: 2;
+  }
+  .contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 48px;
+    border: 1px solid rgba(244,242,238,0.4);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.4s;
+  }
+  .contact-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--white);
+    transform: translateX(-101%);
+    transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    z-index: -1;
+  }
+  .contact-btn:hover { color: var(--black); }
+  .contact-btn:hover::before { transform: translateX(0); }
+
+
+  /* Liquid Metal Button */
+  .liquid-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 46px;
+    border-radius: 100px;
+    text-decoration: none;
+    cursor: none;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .liquid-btn-lg {
+    width: 220px;
+    height: 54px;
+  }
+  .liquid-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 100px;
+    z-index: 1;
+  }
+  .liquid-inner {
+    position: absolute;
+    inset: 2px;
+    border-radius: 100px;
+    background: linear-gradient(180deg, #202020 0%, #0a0a0a 100%);
+    z-index: 2;
+    transition: box-shadow 0.2s ease;
+  }
+  .liquid-btn:hover .liquid-inner {
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
+  }
+  .liquid-label {
+    position: relative;
+    z-index: 3;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(244,242,238,0.75);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    transition: color 0.3s, letter-spacing 0.3s;
+    white-space: nowrap;
+  }
+  .liquid-btn:hover .liquid-label {
+    color: rgba(244,242,238,1);
+    letter-spacing: 0.22em;
+  }
+
+  /* Footer */
+  footer {
+    padding: 32px 48px;
+    border-top: 1px solid rgba(244,242,238,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+  }
+  .footer-lang {
+    display: flex;
+    gap: 16px;
+  }
+  .lang-btn {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+    cursor: none;
+    transition: color 0.3s;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+  .lang-btn.active, .lang-btn:hover { color: var(--white); }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { gap: 24px; }
+    #hero { padding: 0 24px 60px; }
+    #works, #about, #contact { padding: 80px 24px; }
+    .works-grid { grid-template-columns: 1fr; }
+    .work-item:first-child { grid-row: span 1; aspect-ratio: 4/3; }
+    #about { grid-template-columns: 1fr; gap: 40px; }
+    footer { padding: 24px; flex-direction: column; gap: 16px; text-align: center; }
+    .platforms-strip { padding: 32px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-text">
+    <span style="animation-delay:0s">J</span><span style="animation-delay:0.07s">E</span><span style="animation-delay:0.14s">N</span><span style="animation-delay:0.21s">N</span><span style="animation-delay:0.28s">Y</span>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <a href="#" class="nav-logo">JENNY</a>
+  <ul class="nav-links">
+    <li><a href="#works">Works</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="v-line"></div>
+  <div class="v-line"></div>
+  <div class="v-line"></div>
+
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>SNS CREATOR</span>
+      <span>BRAND PLANNER</span>
+      <span>VISUAL DIRECTOR</span>
+      <span>CONTENT MAKER</span>
+      <span>SNS CREATOR</span>
+      <span>BRAND PLANNER</span>
+      <span>VISUAL DIRECTOR</span>
+      <span>CONTENT MAKER</span>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">SNS Creator &amp; Brand Planner — Based in Japan</p>
+    <h1 class="hero-name">
+      <span class="line"><span>JENNY.</span></span>
+    </h1>
+    <div class="role-rotator">
+      <div class="role-dot"></div>
+      <div class="role-text">
+        <div class="role-inner">
+          <span>SNS ビジュアルデザイナー</span>
+          <span>コンテンツプランナー</span>
+          <span>動画クリエイター</span>
+          <span>ブランドプロデューサー</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-bottom">
+      <p class="hero-desc">
+        ブランドの世界観を、<br>
+        SNSというキャンバスで表現する。<br>
+        Instagram / TikTok / X を中心に、<br>
+        コンテンツ企画から制作まで一貫対応。
+      </p>
+      <div class="hero-cta">
+        <a href="#works" class="liquid-btn" id="heroBtn">
+          <canvas class="liquid-canvas" id="heroBtnCanvas"></canvas>
+          <span class="liquid-inner"></span>
+          <span class="liquid-label">View Works →</span>
+        </a>
+        <span class="scroll-hint">Scroll to explore</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<!-- Works -->
+<section id="works">
+  <p class="section-label reveal">Selected Works</p>
+  <div class="works-grid">
+    <div class="work-item reveal">
+      <div class="work-bg work-pattern-1"></div>
+      <div class="work-number">01</div>
+      <div class="work-info">
+        <p class="work-cat">Brand Visual</p>
+        <h3 class="work-title">ブランドビジュアル<br>ディレクション</h3>
+      </div>
+    </div>
+    <div class="work-item reveal" style="transition-delay:0.1s">
+      <div class="work-bg work-pattern-2"></div>
+      <div class="work-number">02</div>
+      <div class="work-info">
+        <p class="work-cat">SNS Design</p>
+        <h3 class="work-title">Instagram フィード<br>デザイン</h3>
+      </div>
+    </div>
+    <div class="work-item reveal" style="transition-delay:0.2s">
+      <div class="work-bg work-pattern-3"></div>
+      <div class="work-number">03</div>
+      <div class="work-info">
+        <p class="work-cat">Video Edit</p>
+        <h3 class="work-title">TikTok リール<br>動画編集</h3>
+      </div>
+    </div>
+    <div class="work-item reveal" style="transition-delay:0.3s">
+      <div class="work-bg work-pattern-4"></div>
+      <div class="work-number">04</div>
+      <div class="work-info">
+        <p class="work-cat">Content Planning</p>
+        <h3 class="work-title">SNS コンテンツ<br>企画 &amp; 運用</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Platforms strip -->
+<div class="platforms-strip reveal">
+  <span class="platforms-label">Platforms</span>
+  <div class="platform-list">
+    <span class="platform-item">Instagram</span>
+    <span class="platform-item">TikTok</span>
+    <span class="platform-item">X / Twitter</span>
+  </div>
+</div>
+
+<!-- About -->
+<section id="about">
+  <div class="reveal">
+    <h2 class="about-heading">ABOUT<br><em>ME.</em></h2>
+  </div>
+  <div class="reveal" style="transition-delay:0.15s">
+    <p class="about-body">
+      SNSクリエイターとして、ブランドのビジョンをビジュアルとコンテンツで表現してきました。<br><br>
+      ビジュアルデザインから動画編集、コンテンツ企画まで、一貫したブランド体験を届けることが得意です。
+    </p>
+    <div class="about-skills">
+      <span class="skill-tag">SNS Visual Design</span>
+      <span class="skill-tag">Content Planning</span>
+      <span class="skill-tag">Video Editing</span>
+      <span class="skill-tag">Brand Strategy</span>
+      <span class="skill-tag">Copywriting</span>
+      <span class="skill-tag">Instagram</span>
+      <span class="skill-tag">TikTok</span>
+      <span class="skill-tag">X / Twitter</span>
+    </div>
+    <div style="margin-top:40px">
+      <a href="about.html" class="liquid-btn" id="aboutMoreBtn" style="width:180px;height:46px">
+        <canvas class="liquid-canvas" id="aboutMoreCanvas"></canvas>
+        <span class="liquid-inner"></span>
+        <span class="liquid-label">View More →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <h2 class="contact-heading reveal">
+    LET'S<br><span>WORK</span><br>TOGETHER.
+  </h2>
+  <p class="contact-sub reveal" style="transition-delay:0.1s">
+    お仕事のご依頼・コラボレーションのご相談は<br>お気軽にお問い合わせください。
+  </p>
+  <a href="/cdn-cgi/l/email-protection#c0b9afb5b280a5ada1a9aceea3afad" class="liquid-btn liquid-btn-lg reveal" id="contactBtn" style="transition-delay:0.2s">
+    <canvas class="liquid-canvas" id="contactBtnCanvas"></canvas>
+    <span class="liquid-inner"></span>
+    <span class="liquid-label">Get in Touch →</span>
+  </a>
+</section>
+
+<!-- Footer -->
+<footer>
+  <span class="footer-copy">© 2025 Jenny. All rights reserved.</span>
+  <div class="footer-lang">
+    <button class="lang-btn active">JA</button>
+    <button class="lang-btn">ZH</button>
+    <button class="lang-btn">EN</button>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Loader
+  function hideLoader() {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+    }, 1400);
+  }
+  if (document.readyState === 'complete') {
+    hideLoader();
+  } else {
+    window.addEventListener('load', hideLoader);
+    document.addEventListener('DOMContentLoaded', hideLoader);
+  }
+
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Lang switcher
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Liquid Metal Button Canvas Animation
+  function initLiquidBtn(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const btn = canvas.parentElement;
+    let w, h, t = Math.random() * 100;
+    let animId;
+    function resize() {
+      const rect = btn.getBoundingClientRect();
+      w = canvas.width = rect.width * devicePixelRatio;
+      h = canvas.height = rect.height * devicePixelRatio;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+    }
+    function noise(x, y, t) {
+      return (Math.sin(x * 2.1 + t * 0.7) * Math.cos(y * 1.8 - t * 0.5)
+            + Math.sin(x * 3.7 - t * 0.4) * Math.cos(y * 2.9 + t * 0.6)
+            + Math.sin((x + y) * 1.5 + t * 0.9) * 0.5) / 2.5;
+    }
+    function draw() {
+      t += 0.012;
+      ctx.clearRect(0, 0, w, h);
+      const cols = 40, rows = 14;
+      const cw = w / cols, ch = h / rows;
+      for (let i = 0; i <= cols; i++) {
+        for (let j = 0; j <= rows; j++) {
+          const n = noise(i / cols * 4, j / rows * 4, t);
+          const bright = Math.floor(((n + 1) / 2) * 180 + 60);
+          const alpha = ((n + 1) / 2) * 0.85 + 0.1;
+          ctx.fillStyle = `rgba(${bright},${bright},${bright},${alpha})`;
+          ctx.beginPath();
+          ctx.arc(i * cw, j * ch, cw * 0.38, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      const sweep = (Math.sin(t * 0.6) + 1) / 2;
+      const grad = ctx.createLinearGradient(sweep * w - w * 0.4, 0, sweep * w + w * 0.4, h);
+      grad.addColorStop(0, 'rgba(255,255,255,0)');
+      grad.addColorStop(0.4, 'rgba(255,255,255,0.18)');
+      grad.addColorStop(0.5, 'rgba(255,255,255,0.32)');
+      grad.addColorStop(0.6, 'rgba(255,255,255,0.18)');
+      grad.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+      animId = requestAnimationFrame(draw);
+    }
+    resize();
+    draw();
+    window.addEventListener('resize', re
