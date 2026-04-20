@@ -444,6 +444,64 @@
   .work-pattern-3 { background: radial-gradient(circle at 30% 70%, #1e1e1e 0%, #111 60%); }
   .work-pattern-4 { background: repeating-linear-gradient(90deg, #111, #111 3px, #161616 3px, #161616 16px); }
 
+  /* Works category zones */
+  .works-zones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .works-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .zone-header {
+    padding: 28px 32px;
+    background: #111;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid rgba(244,242,238,0.05);
+  }
+  .zone-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 60px;
+    color: rgba(244,242,238,0.06);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .zone-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.1em;
+    color: var(--white);
+  }
+  .zone-sub {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--gray);
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+  .zone-items {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+  .zone-items .work-item {
+    flex: 1;
+    min-height: 200px;
+    aspect-ratio: unset;
+  }
+  .zone-items .work-item.work-item-hero {
+    flex: 2;
+  }
+  .work-photo {
+    background-size: cover;
+    background-position: center;
+  }
+
   /* About strip */
   #about {
     padding: 120px 48px;
@@ -612,6 +670,7 @@
     #hero { padding: 0 24px 60px; }
     #works, #about, #contact { padding: 80px 24px; }
     .works-grid { grid-template-columns: 1fr; }
+    .works-zones { grid-template-columns: 1fr; }
     .work-item:first-child { grid-row: span 1; aspect-ratio: 4/3; }
     #about { grid-template-columns: 1fr; gap: 40px; }
     footer { padding: 24px; flex-direction: column; gap: 16px; text-align: center; }
@@ -1194,7 +1253,7 @@
       <p class="hero-desc">
         ブランドの世界観を、<br>
         SNSというキャンバスで表現する。<br>
-        Instagram / TikTok / X を中心に、<br>
+        Instagram / TikTok / X / Threads / Red を中心に、<br>
         コンテンツ企画から制作まで一貫対応。
       </p>
       <div class="hero-cta">
@@ -1237,40 +1296,67 @@
 <!-- Works -->
 <section id="works">
   <p class="section-label reveal">Selected Works</p>
-  <div class="works-grid">
-    <div class="work-item reveal" onclick="showPage('beams');return false;" style="cursor:none;">
-      <div class="work-bg work-pattern-1"></div>
-      <div class="work-number">01</div>
-      <div class="work-overlay">View Case Study →</div>
-      <div class="work-info">
-        <p class="work-cat">Social Media Strategy</p>
-        <h3 class="work-title">BEAMS Taiwan<br>SNS立ち上げ</h3>
+  <div class="works-zones">
+
+    <!-- Zone 1: SNS PLANER -->
+    <div class="works-zone reveal">
+      <div class="zone-header">
+        <span class="zone-num">01</span>
+        <div>
+          <h3 class="zone-title">SNS PLANER</h3>
+          <p class="zone-sub">コンテンツ企画 · 運用戦略 · クリエイティブ制作</p>
+        </div>
+      </div>
+      <div class="zone-items">
+        <div class="work-item work-item-hero" onclick="showPage('beams');return false;" style="cursor:none;">
+          <div class="work-bg work-photo" style="background-image:url('beams-01.jpg');"></div>
+          <div class="work-number">01</div>
+          <div class="work-overlay">View Case Study →</div>
+          <div class="work-info">
+            <p class="work-cat">Social Media Strategy</p>
+            <h3 class="work-title">BEAMS Taiwan<br>SNS立ち上げ</h3>
+          </div>
+        </div>
+        <div class="work-item" style="transition-delay:0.1s">
+          <div class="work-bg work-pattern-2"></div>
+          <div class="work-number">02</div>
+          <div class="work-info">
+            <p class="work-cat">Content Planning</p>
+            <h3 class="work-title">SNS コンテンツ<br>企画 &amp; 運用</h3>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="work-item reveal" style="transition-delay:0.1s">
-      <div class="work-bg work-pattern-2"></div>
-      <div class="work-number">02</div>
-      <div class="work-info">
-        <p class="work-cat">SNS Design</p>
-        <h3 class="work-title">Instagram フィード<br>デザイン</h3>
+
+    <!-- Zone 2: Design Center -->
+    <div class="works-zone reveal" style="transition-delay:0.15s">
+      <div class="zone-header">
+        <span class="zone-num">02</span>
+        <div>
+          <h3 class="zone-title">DESIGN CENTER</h3>
+          <p class="zone-sub">Banner · LP · Visual Design</p>
+        </div>
+      </div>
+      <div class="zone-items">
+        <div class="work-item" style="transition-delay:0.2s">
+          <div class="work-bg work-pattern-3"></div>
+          <div class="work-number">03</div>
+          <div class="work-info">
+            <p class="work-cat">SNS Design</p>
+            <h3 class="work-title">Instagram フィード<br>デザイン</h3>
+          </div>
+        </div>
+        <div class="work-item" style="transition-delay:0.3s">
+          <div class="work-bg work-pattern-4"></div>
+          <div class="work-number">04</div>
+          <div class="work-info">
+            <p class="work-cat">Web Design</p>
+            <h3 class="work-title">Banner &amp; LP<br>デザイン</h3>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="work-item reveal" style="transition-delay:0.2s">
-      <div class="work-bg work-pattern-3"></div>
-      <div class="work-number">03</div>
-      <div class="work-info">
-        <p class="work-cat">Video Edit</p>
-        <h3 class="work-title">TikTok リール<br>動画編集</h3>
-      </div>
-    </div>
-    <div class="work-item reveal" style="transition-delay:0.3s">
-      <div class="work-bg work-pattern-4"></div>
-      <div class="work-number">04</div>
-      <div class="work-info">
-        <p class="work-cat">Content Planning</p>
-        <h3 class="work-title">SNS コンテンツ<br>企画 &amp; 運用</h3>
-      </div>
-    </div>
+
   </div>
 </section>
 
@@ -1281,6 +1367,8 @@
     <span class="platform-item">Instagram</span>
     <span class="platform-item">TikTok</span>
     <span class="platform-item">X / Twitter</span>
+    <span class="platform-item">Threads</span>
+    <span class="platform-item">小紅書 / Red</span>
   </div>
 </div>
 
@@ -1634,6 +1722,7 @@
   <!-- IMG ① Hero Full-width Image -->
   <div class="bp-hero-img-wrap">
     <img src="beams-01.jpg" alt="hütte × BEAMS コラボ — 植物バッグビジュアル"
+         style="object-position: center 65%;"
          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
     <div class="bp-hero-img-placeholder" style="display:none;">
       <span class="ph-num">IMG ①</span>
@@ -1709,6 +1798,7 @@
       <div>
         <!-- IMG ② Account grid screenshot -->
         <img class="bp-img landscape" src="beams-02.png" alt="BEAMS Taiwan IGアカウント グリッド"
+             style="object-position: center top;"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
         <div class="bp-img-ph landscape" style="display:none;">
           <span class="ph-num">IMG ②</span>
@@ -1768,6 +1858,7 @@
       <div>
         <!-- IMG ③ TAICHUNG STAFF: FUN -->
         <img class="bp-img portrait" src="beams-03.png" alt="TAICHUNG STAFF: FUN 投稿"
+             style="object-position: center center;"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
         <div class="bp-img-ph portrait" style="display:none;">
           <span class="ph-num">IMG ③</span>
@@ -1793,7 +1884,7 @@
     <!-- IMG ④ ikuikustudio POP UP -->
     <div style="margin-bottom:48px;">
       <img class="bp-img landscape" src="beams-04.png" alt="ikuikustudio × BEAMS POP UP Reel"
-           style="max-width:640px;"
+           style="max-width:640px; object-position: center 30%;"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
       <div class="bp-img-ph landscape" style="display:none;max-width:640px;">
         <span class="ph-num">IMG ④</span>
