@@ -578,14 +578,16 @@
   #contact {
     padding: 120px 48px;
     border-top: 1px solid rgba(244,242,238,0.08);
-    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
   }
   .contact-heading {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(56px, 10vw, 140px);
     letter-spacing: 0.03em;
     line-height: 1;
-    margin-bottom: 48px;
+    margin-bottom: 16px;
+    text-align: center;
   }
   .contact-heading span {
     color: transparent;
@@ -595,25 +597,102 @@
     font-family: 'Shippori Mincho', serif;
     font-size: 14px;
     color: var(--gray);
-    margin-bottom: 48px;
+    margin-bottom: 72px;
     line-height: 2;
+    text-align: center;
   }
-  .contact-btn {
-    display: inline-flex;
+
+  /* Contact Form */
+  .contact-form-wrap {
+    border-top: 1px solid rgba(244,242,238,0.15);
+  }
+  .cf-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
-    padding: 18px 48px;
-    border: 1px solid rgba(244,242,238,0.4);
+    padding: 28px 0 20px;
+    border-bottom: 1px solid rgba(244,242,238,0.08);
+    margin-bottom: 0;
+  }
+  .cf-header-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    font-weight: 600;
     color: var(--white);
-    text-decoration: none;
+  }
+  .cf-required-note {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: #c0392b;
+  }
+  .cf-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    align-items: start;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(244,242,238,0.06);
+  }
+  .cf-label {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 10px;
+  }
+  .cf-req {
+    color: #c0392b;
+    font-size: 11px;
+  }
+  .cf-input,
+  .cf-select,
+  .cf-textarea {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(244,242,238,0.15);
+    color: var(--white);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+  }
+  .cf-input::placeholder,
+  .cf-textarea::placeholder { color: rgba(244,242,238,0.2); }
+  .cf-input:focus,
+  .cf-select:focus,
+  .cf-textarea:focus { border-color: rgba(244,242,238,0.5); }
+  .cf-select {
+    cursor: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+  }
+  .cf-select option { background: #1a1a1a; color: var(--white); }
+  .cf-textarea { min-height: 180px; resize: vertical; line-height: 1.8; }
+  .cf-submit-row { padding: 48px 0 0; display: flex; justify-content: center; }
+  .cf-submit {
+    font-family: 'Noto Sans JP', sans-serif;
     font-size: 11px;
     letter-spacing: 0.25em;
     text-transform: uppercase;
+    color: var(--white);
+    background: transparent;
+    border: 1px solid rgba(244,242,238,0.4);
+    padding: 18px 64px;
+    cursor: none;
     position: relative;
     overflow: hidden;
     transition: color 0.4s;
   }
-  .contact-btn::before {
+  .cf-submit::before {
     content: '';
     position: absolute; inset: 0;
     background: var(--white);
@@ -621,8 +700,22 @@
     transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
     z-index: -1;
   }
-  .contact-btn:hover { color: var(--black); }
-  .contact-btn:hover::before { transform: translateX(0); }
+  .cf-submit:hover { color: var(--black); }
+  .cf-submit:hover::before { transform: translateX(0); }
+  .cf-success {
+    display: none; text-align: center; padding: 48px 0;
+    font-family: 'Shippori Mincho', serif; font-size: 15px;
+    color: var(--light-gray); line-height: 2;
+  }
+  .cf-success strong {
+    display: block; font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px; letter-spacing: 0.1em; color: var(--white); margin-bottom: 16px;
+  }
+  @media (max-width: 768px) {
+    #contact { padding: 80px 24px; }
+    .cf-row { grid-template-columns: 1fr; gap: 10px; }
+    .cf-label { padding-top: 0; }
+  }
 
   /* Footer */
   footer {
@@ -1420,11 +1513,58 @@
   <p class="contact-sub reveal" style="transition-delay:0.1s">
     お仕事のご依頼・コラボレーションのご相談は<br>お気軽にお問い合わせください。
   </p>
-  <a href="/cdn-cgi/l/email-protection#1c6573696e5c79717d7570327f7371" class="liquid-btn liquid-btn-lg reveal" id="contactBtn" style="transition-delay:0.2s">
-    <canvas class="liquid-canvas" id="contactBtnCanvas"></canvas>
-    <span class="liquid-inner"></span>
-    <span class="liquid-label">Get in Touch →</span>
-  </a>
+
+  <div class="contact-form-wrap reveal" style="transition-delay:0.15s">
+    <div class="cf-header">
+      <span class="cf-header-title">お問い合わせ</span>
+      <span class="cf-required-note">※ 入力必須項目</span>
+    </div>
+
+    <form id="contactForm" action="https://formspree.io/f/mdaydwzp" method="POST">
+      <div class="cf-row">
+        <label class="cf-label" for="cf-company">貴社名 <span class="cf-req">※</span></label>
+        <input class="cf-input" id="cf-company" name="company" type="text" placeholder="例：株式会社〇〇〇〇" required>
+      </div>
+      <div class="cf-row">
+        <label class="cf-label" for="cf-name">氏名 <span class="cf-req">※</span></label>
+        <input class="cf-input" id="cf-name" name="name" type="text" placeholder="例：山田太郎" required>
+      </div>
+      <div class="cf-row">
+        <label class="cf-label" for="cf-email">メールアドレス <span class="cf-req">※</span></label>
+        <input class="cf-input" id="cf-email" name="email" type="email" placeholder="例：sample@gmail.com" required>
+      </div>
+      <div class="cf-row">
+        <label class="cf-label" for="cf-email2">メールアドレス確認 <span class="cf-req">※</span></label>
+        <input class="cf-input" id="cf-email2" name="_email_confirm" type="email" placeholder="例：sample@gmail.com" required>
+      </div>
+      <div class="cf-row">
+        <label class="cf-label" for="cf-type">お問い合わせ種別 <span class="cf-req">※</span></label>
+        <select class="cf-select" id="cf-type" name="type" required>
+          <option value="" disabled selected>選択してください</option>
+          <option value="SNS運用・コンテンツ企画">SNS運用・コンテンツ企画</option>
+          <option value="バナー・LP制作">バナー・LP制作</option>
+          <option value="動画編集">動画編集</option>
+          <option value="ブランドコラボレーション">ブランドコラボレーション</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+      <div class="cf-row">
+        <label class="cf-label" for="cf-message">お問い合わせ内容 <span class="cf-req">※</span></label>
+        <textarea class="cf-textarea" id="cf-message" name="message" placeholder="ご依頼内容や予算感など、お気軽にご記入ください。" required></textarea>
+      </div>
+      <input type="hidden" name="_subject" value="【ポートフォリオ】お問い合わせが届きました">
+      <input type="text" name="_gotcha" style="display:none">
+      <div class="cf-submit-row">
+        <button type="submit" class="cf-submit">送信する →</button>
+      </div>
+    </form>
+
+    <div class="cf-success" id="cfSuccess">
+      <strong>THANK YOU.</strong>
+      お問い合わせいただきありがとうございます。<br>
+      内容を確認の上、3営業日以内にご連絡いたします。
+    </div>
+  </div>
 </section>
 
 </div><!-- end home-page -->
@@ -2153,6 +2293,34 @@
       btn.classList.add('active');
     });
   });
+
+  // Contact form — email confirm check + Formspree AJAX
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email  = document.getElementById('cf-email').value.trim();
+      const email2 = document.getElementById('cf-email2').value.trim();
+      if (email !== email2) {
+        document.getElementById('cf-email2').style.borderColor = '#c0392b';
+        document.getElementById('cf-email2').setCustomValidity('メールアドレスが一致しません');
+        document.getElementById('cf-email2').reportValidity();
+        return;
+      }
+      document.getElementById('cf-email2').style.borderColor = '';
+      document.getElementById('cf-email2').setCustomValidity('');
+      const data = new FormData(contactForm);
+      const res = await fetch(contactForm.action, {
+        method: 'POST', body: data, headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        contactForm.style.display = 'none';
+        document.getElementById('cfSuccess').style.display = 'block';
+      } else {
+        alert('送信に失敗しました。時間をおいて再度お試しください。');
+      }
+    });
+  }
 
 </script>
 </body>
