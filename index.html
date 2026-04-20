@@ -835,6 +835,7 @@
   #beams-page .bp-img { width: 100%; object-fit: cover; display: block; border: 1px solid rgba(244,242,238,0.08); }
   #beams-page .bp-img.portrait { aspect-ratio: 9/16; max-height: 600px; object-position: top; }
   #beams-page .bp-img.landscape { aspect-ratio: 4/3; }
+  #beams-page .bp-img.square { aspect-ratio: 1/1; }
   #beams-page .bp-img-ph {
     border: 1px dashed rgba(244,242,238,0.1); background: #0f0f0f;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -1867,7 +1868,7 @@
       </div>
       <div>
         <!-- IMG ③ TAICHUNG STAFF: FUN -->
-        <img class="bp-img portrait" src="beams-03.png" alt="TAICHUNG STAFF: FUN 投稿"
+        <img class="bp-img square" src="beams-03.png" alt="TAICHUNG STAFF: FUN 投稿"
              style="object-position: center center;"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
         <div class="bp-img-ph portrait" style="display:none;">
@@ -1893,10 +1894,10 @@
 
     <!-- IMG ④ ikuikustudio POP UP -->
     <div style="margin-bottom:48px;">
-      <img class="bp-img landscape" src="beams-04.png" alt="ikuikustudio × BEAMS POP UP Reel"
-           style="max-width:640px; object-position: center 30%;"
+      <img class="bp-img portrait" src="beams-04.png" alt="ikuikustudio × BEAMS POP UP Reel"
+           style="max-width:480px; object-position: center center;"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-      <div class="bp-img-ph landscape" style="display:none;max-width:640px;">
+      <div class="bp-img-ph portrait" style="display:none;max-width:480px;">
         <span class="ph-num">IMG ④</span>
         <span>ikuikustudio × BEAMS POP UP<br>コラボイベントReel（211いいね）</span>
       </div>
