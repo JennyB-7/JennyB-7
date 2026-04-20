@@ -863,14 +863,24 @@
   }
   #beams-page .bp-reel-card:hover { border-color: rgba(244,242,238,0.3); }
   #beams-page .bp-reel-thumb {
-    aspect-ratio: 16/9; background: #111;
-    display: flex; align-items: center; justify-content: center; overflow: hidden;
+    aspect-ratio: 4/5; background: #111;
+    position: relative; overflow: hidden;
   }
-  #beams-page .bp-reel-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+  #beams-page .bp-reel-thumb img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover; opacity: 0.75;
+    transition: opacity 0.4s, transform 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  #beams-page .bp-reel-card:hover .bp-reel-thumb img { opacity: 0.55; transform: scale(1.04); }
   #beams-page .bp-reel-play {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    z-index: 2;
     width: 52px; height: 52px; border: 1.5px solid var(--white); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(10,10,10,0.4); backdrop-filter: blur(4px);
+    transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s;
   }
+  #beams-page .bp-reel-card:hover .bp-reel-play { transform: translate(-50%,-50%) scale(1.12); background: rgba(10,10,10,0.6); }
   #beams-page .bp-reel-play::after {
     content: ''; display: block; border: 9px solid transparent;
     border-left: 14px solid var(--white); margin-left: 4px;
@@ -1908,6 +1918,7 @@
       <div class="bp-reel-grid">
         <a class="bp-reel-card" href="https://www.instagram.com/reel/C6q5g9_xu70/?igsh=MTVtZWN0aGxvNXgwdw==" target="_blank" rel="noopener">
           <div class="bp-reel-thumb">
+            <img src="reel-01.jpg" alt="FRED PERRY × BEAMS コラボイベントReel">
             <div class="bp-reel-play"></div>
           </div>
           <div class="bp-reel-info">
@@ -1921,6 +1932,7 @@
         </a>
         <a class="bp-reel-card" href="https://www.instagram.com/reel/C7nmQO6tsB0/?igsh=ODJjc3NtMDB6dTh2" target="_blank" rel="noopener">
           <div class="bp-reel-thumb">
+            <img src="reel-02.jpg" alt="LaLaport 1st Anniversary BEAMS Reel">
             <div class="bp-reel-play"></div>
           </div>
           <div class="bp-reel-info">
