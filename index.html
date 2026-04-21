@@ -1034,6 +1034,85 @@
     margin-left: 8px;
     vertical-align: middle;
   }
+  /* Static price table */
+  .pp-table-section {
+    padding: 80px 48px;
+    border-top: 1px solid rgba(244,242,238,0.08);
+  }
+  .pp-table-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+  .pp-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .pp-table thead tr {
+    border-bottom: 1px solid rgba(244,242,238,0.15);
+  }
+  .pp-table th {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--gray);
+    text-transform: uppercase;
+    padding: 0 0 16px;
+    text-align: left;
+    font-weight: 400;
+  }
+  .pp-table th:last-child { text-align: right; }
+  .pp-table tbody tr {
+    border-bottom: 1px solid rgba(244,242,238,0.06);
+    transition: background 0.2s;
+  }
+  .pp-table tbody tr:hover { background: rgba(244,242,238,0.03); }
+  .pp-table td {
+    padding: 22px 0;
+    vertical-align: middle;
+  }
+  .pp-table .td-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: rgba(244,242,238,0.2);
+    width: 48px;
+  }
+  .pp-table .td-cat {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--gray);
+    text-transform: uppercase;
+    width: 160px;
+  }
+  .pp-table .td-name {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    color: var(--white);
+  }
+  .pp-table .td-desc {
+    font-size: 11px;
+    color: var(--gray);
+    line-height: 1.7;
+    padding-left: 24px;
+  }
+  .pp-table .td-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .pp-table .td-price small {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+    margin-left: 6px;
+    vertical-align: middle;
+  }
   .pp-footer-notes {
     padding: 32px 48px;
     border-top: 1px solid rgba(244,242,238,0.08);
@@ -1055,6 +1134,10 @@
     font-size: 13px;
     letter-spacing: 0.15em;
     color: rgba(244,242,238,0.2);
+  }
+  @media (max-width: 768px) {
+    .pp-table-section { padding: 48px 24px; }
+    .pp-table .td-cat, .pp-table .td-desc { display: none; }
   }
   @media (max-width: 768px) {
     #price-page nav.pp-nav { padding: 20px 24px; }
@@ -2509,6 +2592,66 @@
 
   </div>
 
+  <!-- Static full table -->
+  <div class="pp-table-section">
+    <p class="pp-table-label">Full Price List</p>
+    <table class="pp-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Category</th>
+          <th>Service</th>
+          <th>Detail</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-num">01</td>
+          <td class="td-cat">Account Strategy</td>
+          <td class="td-name">アカウント設計・ブランディング</td>
+          <td class="td-desc">プロフィール設計、フィードビジュアル統一、世界観づくり</td>
+          <td class="td-price">¥150,000〜<small>/ 初期</small></td>
+        </tr>
+        <tr>
+          <td class="td-num">02</td>
+          <td class="td-cat">Content Planning</td>
+          <td class="td-name">コンテンツ企画・投稿運用</td>
+          <td class="td-desc">月次投稿計画、キャプション作成、ハッシュタグ設計</td>
+          <td class="td-price">¥200,000〜<small>/ 月</small></td>
+        </tr>
+        <tr>
+          <td class="td-num">03</td>
+          <td class="td-cat">Visual Design</td>
+          <td class="td-name">ビジュアルデザイン制作</td>
+          <td class="td-desc">投稿画像・バナー・Instagramフィードデザイン</td>
+          <td class="td-price">¥15,000〜<small>/ 枚</small></td>
+        </tr>
+        <tr>
+          <td class="td-num">04</td>
+          <td class="td-cat">Video Editing</td>
+          <td class="td-name">動画編集（TikTok・リール）</td>
+          <td class="td-desc">撮影素材の編集、テロップ・BGM・エフェクト対応</td>
+          <td class="td-price">¥50,000〜<small>/ 本</small></td>
+        </tr>
+        <tr>
+          <td class="td-num">05</td>
+          <td class="td-cat">Account Launch</td>
+          <td class="td-name">SNSアカウント立ち上げ</td>
+          <td class="td-desc">0からのアカウント設計〜初期運用セットアップ</td>
+          <td class="td-price">¥250,000〜<small>/ 一式</small></td>
+        </tr>
+        <tr>
+          <td class="td-num">06</td>
+          <td class="td-cat">Monthly Report</td>
+          <td class="td-name">月次レポート・改善提案</td>
+          <td class="td-desc">値分析、改善施策提案、定例MTG対応</td>
+          <td class="td-price">¥50,000〜<small>/ 月</small></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <div class="pp-footer-notes">
     <div>
       <p>※料金は目安です。規模・ボリュームに応じてお見積もりします</p>
@@ -2607,13 +2750,29 @@
     resize(); draw(); window.addEventListener('resize',resize);
   }
 
-  // Price accordion
-  document.querySelectorAll('.pp-acc-item').forEach(item => {
+  // Price accordion — auto-cycle
+  let ppIndex = 0;
+  let ppTimer = null;
+  const ppItems = document.querySelectorAll('.pp-acc-item');
+  function ppSetActive(idx) {
+    ppItems.forEach(i => i.classList.remove('active'));
+    ppItems[idx].classList.add('active');
+    ppIndex = idx;
+  }
+  function ppStartAuto() {
+    ppTimer = setInterval(() => {
+      ppSetActive((ppIndex + 1) % ppItems.length);
+    }, 2200);
+  }
+  // pause on hover, resume on leave
+  ppItems.forEach((item, idx) => {
     item.addEventListener('mouseenter', () => {
-      document.querySelectorAll('.pp-acc-item').forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
+      clearInterval(ppTimer);
+      ppSetActive(idx);
     });
+    item.addEventListener('mouseleave', () => { ppStartAuto(); });
   });
+  ppStartAuto();
 
   // Works zone tab switching
   function switchZone(zone, btn) {
