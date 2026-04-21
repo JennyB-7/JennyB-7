@@ -871,143 +871,16 @@
 
   /* ── Price Page ── */
   #price-page {
-    background: #EDE8DC;
+    background: var(--black);
     min-height: 100vh;
-    font-family: 'Inter', sans-serif;
-    color: #1a1a1a;
+    color: var(--white);
   }
-  .pp-nav {
+  #price-page nav.pp-nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 28px 48px 0;
-  }
-  .pp-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 0.1em;
-    color: #1a1a1a;
-    text-decoration: none;
-  }
-  .pp-logo-icon {
-    width: 36px;
-    height: 36px;
-    border: 2px solid #1a1a1a;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-  }
-  .pp-nav-right {
-    display: flex;
-    gap: 12px;
-  }
-  .pp-nav-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 22px;
-    border: 1.5px solid #1a1a1a;
-    border-radius: 999px;
-    background: none;
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    color: #1a1a1a;
-    cursor: none;
-    letter-spacing: 0.05em;
-    transition: background 0.2s, color 0.2s;
-  }
-  .pp-nav-btn:hover { background: #1a1a1a; color: #EDE8DC; }
-  .pp-body {
-    padding: 32px 48px 48px;
-    position: relative;
-  }
-  .pp-title-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 32px;
-  }
-  .pp-title {
-    font-family: 'Shippori Mincho', serif;
-    font-size: 13px;
-    letter-spacing: 0.15em;
-    color: #666;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .pp-illust {
-    position: absolute;
-    top: 0;
-    right: 460px;
-    width: 160px;
-    opacity: 0.9;
-    pointer-events: none;
-  }
-  .pp-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-  .pp-card {
-    background: #2ECEC5;
-    border-radius: 20px;
-    padding: 28px 28px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    position: relative;
-    overflow: hidden;
-    min-height: 200px;
-  }
-  .pp-card-title {
-    font-family: 'Shippori Mincho', serif;
-    font-size: clamp(16px, 1.6vw, 22px);
-    font-weight: 700;
-    color: #fff;
-    line-height: 1.4;
-    word-break: keep-all;
-  }
-  .pp-card-desc {
-    font-size: 12px;
-    color: rgba(255,255,255,0.85);
-    line-height: 1.7;
-    flex: 1;
-  }
-  .pp-price {
-    display: inline-block;
-    background: #C4A8E8;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    padding: 10px 22px;
-    border-radius: 999px;
-    letter-spacing: 0.04em;
-    align-self: flex-start;
-    margin-top: 4px;
-  }
-  .pp-footer-notes {
-    margin-top: 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .pp-footer-notes p {
-    font-size: 11px;
-    color: #888;
-    letter-spacing: 0.04em;
-  }
-  .pp-footer-notes p::before { content: '• '; }
-  .pp-credit {
-    text-align: right;
-    margin-top: 24px;
-    font-size: 12px;
-    color: #aaa;
-    letter-spacing: 0.08em;
+    padding: 32px 48px;
+    border-bottom: 1px solid rgba(244,242,238,0.08);
   }
   .pp-back {
     display: inline-flex;
@@ -1015,17 +888,184 @@
     gap: 8px;
     background: none;
     border: none;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: #888;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--gray);
     cursor: none;
     font-family: 'Inter', sans-serif;
     text-transform: uppercase;
-    transition: color 0.2s;
-    margin-bottom: 24px;
+    transition: color 0.3s;
     padding: 0;
   }
-  .pp-back:hover { color: #1a1a1a; }
+  .pp-back:hover { color: var(--white); }
+  .pp-page-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--gray);
+    text-transform: uppercase;
+  }
+  .pp-hero {
+    padding: 80px 48px 60px;
+    border-bottom: 1px solid rgba(244,242,238,0.08);
+  }
+  .pp-hero-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .pp-hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    color: var(--white);
+  }
+  .pp-hero-title em {
+    font-style: normal;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--white);
+  }
+  .pp-hero-sub {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.8;
+    margin-top: 24px;
+    max-width: 400px;
+  }
+
+  /* Accordion */
+  .pp-accordion {
+    display: flex;
+    height: 480px;
+    gap: 2px;
+    padding: 48px 48px;
+  }
+  .pp-acc-item {
+    position: relative;
+    flex: 0 0 64px;
+    overflow: hidden;
+    border: 1px solid rgba(244,242,238,0.08);
+    cursor: none;
+    transition: flex 0.6s cubic-bezier(0.4,0,0.2,1);
+    background: #111;
+  }
+  .pp-acc-item.active {
+    flex: 1 1 auto;
+  }
+  .pp-acc-num {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: rgba(244,242,238,0.2);
+    z-index: 2;
+  }
+  .pp-acc-title-vert {
+    position: absolute;
+    bottom: 48px;
+    left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+    transform-origin: center center;
+    white-space: nowrap;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    opacity: 1;
+    transition: opacity 0.2s;
+    z-index: 2;
+  }
+  .pp-acc-item.active .pp-acc-title-vert { opacity: 0; pointer-events: none; }
+  .pp-acc-content {
+    position: absolute;
+    inset: 0;
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    opacity: 0;
+    transition: opacity 0.3s 0.1s;
+    z-index: 2;
+    min-width: 260px;
+  }
+  .pp-acc-item.active .pp-acc-content { opacity: 1; }
+  .pp-acc-cat {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .pp-acc-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .pp-acc-desc {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 12px;
+    color: var(--light-gray);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+  .pp-acc-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    border-top: 1px solid rgba(244,242,238,0.15);
+    padding-top: 16px;
+  }
+  .pp-acc-price span {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gray);
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .pp-footer-notes {
+    padding: 32px 48px;
+    border-top: 1px solid rgba(244,242,238,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .pp-footer-notes p {
+    font-size: 10px;
+    color: var(--gray);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+  }
+  .pp-footer-notes p::before { content: '— '; }
+  .pp-credit {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    color: rgba(244,242,238,0.2);
+  }
+  @media (max-width: 768px) {
+    #price-page nav.pp-nav { padding: 20px 24px; }
+    .pp-hero { padding: 48px 24px 40px; }
+    .pp-accordion { flex-direction: column; height: auto; padding: 24px; }
+    .pp-acc-item { flex: 0 0 56px; }
+    .pp-acc-item.active { flex: 0 0 320px; }
+    .pp-acc-title-vert { display: none; }
+    .pp-acc-content { min-width: unset; }
+    .pp-footer-notes { padding: 24px; }
+  }
 
   /* Work item hover overlay */
   .work-overlay {
@@ -1464,15 +1504,6 @@
     .timeline-section { padding: 64px 24px; }
     .timeline-header { grid-template-columns: 1fr; gap: 32px; }
     .career-stats { grid-template-columns: repeat(2, 1fr); padding: 48px 24px; }
-  }
-  @media (max-width: 900px) {
-    .pp-nav { padding: 20px 24px 0; }
-    .pp-body { padding: 24px 24px 40px; }
-    .pp-grid { grid-template-columns: repeat(2, 1fr); }
-    .pp-nav-btn { padding: 8px 14px; font-size: 11px; }
-  }
-  @media (max-width: 600px) {
-    .pp-grid { grid-template-columns: 1fr; }
   }
 
 
@@ -2398,74 +2429,92 @@
 <!-- Price Page -->
 <div id="price-page">
   <nav class="pp-nav">
-    <a href="#" class="pp-logo" onclick="showPage('home');return false;">
-      <span class="pp-logo-icon">⇱</span>
-      JENNY
-    </a>
-    <div class="pp-nav-right">
-      <button class="pp-nav-btn" onclick="showPage('home');setTimeout(()=>document.getElementById('works').scrollIntoView({behavior:'smooth'}),50);">
-        ↗ サービス
-      </button>
-      <button class="pp-nav-btn" onclick="showPage('home');return false;">
-        🌐 Portfolio
-      </button>
-    </div>
+    <button class="pp-back" onclick="showPage('home')">← Back</button>
+    <span class="pp-page-label">SNS 運用 料金表</span>
   </nav>
 
-  <div class="pp-body">
-    <button class="pp-back" onclick="showPage('home')">← Back to Home</button>
+  <div class="pp-hero">
+    <p class="pp-hero-label">Service Menu</p>
+    <h2 class="pp-hero-title">SNS<br><em>PRICE.</em></h2>
+    <p class="pp-hero-sub">お仕事のご依頼・規模・ボリュームに応じてお見積もりします。</p>
+  </div>
 
-    <div class="pp-title-row">
-      <div>
-        <p class="pp-title">SNS 運用 料金表</p>
+  <div class="pp-accordion" id="ppAccordion">
+
+    <div class="pp-acc-item active" data-index="0">
+      <span class="pp-acc-num">01</span>
+      <span class="pp-acc-title-vert">アカウント設計</span>
+      <div class="pp-acc-content">
+        <p class="pp-acc-cat">Account Strategy</p>
+        <h3 class="pp-acc-name">アカウント設計・<br>ブランディング</h3>
+        <p class="pp-acc-desc">プロフィール設計、フィードビジュアル統一、世界観づくり</p>
+        <div class="pp-acc-price">¥150,000〜<span>/ 初期</span></div>
       </div>
     </div>
 
-    <div class="pp-grid">
-
-      <div class="pp-card">
-        <h3 class="pp-card-title">アカウント設計・<br>ブランディング</h3>
-        <p class="pp-card-desc">プロフィール設計、<br>フィードビジュアル統一、世界観づくり</p>
-        <span class="pp-price">¥150,000〜 / 初期</span>
+    <div class="pp-acc-item" data-index="1">
+      <span class="pp-acc-num">02</span>
+      <span class="pp-acc-title-vert">コンテンツ企画</span>
+      <div class="pp-acc-content">
+        <p class="pp-acc-cat">Content Planning</p>
+        <h3 class="pp-acc-name">コンテンツ企画・<br>投稿運用</h3>
+        <p class="pp-acc-desc">月次投稿計画、キャプション作成、ハッシュタグ設計</p>
+        <div class="pp-acc-price">¥200,000〜<span>/ 月</span></div>
       </div>
-
-      <div class="pp-card">
-        <h3 class="pp-card-title">コンテンツ企画・<br>投稿運用</h3>
-        <p class="pp-card-desc">月次投稿計画、キャプション作成、<br>ハッシュタグ設計</p>
-        <span class="pp-price">¥200,000〜 / 月</span>
-      </div>
-
-      <div class="pp-card">
-        <h3 class="pp-card-title">ビジュアルデザイン<br>制作</h3>
-        <p class="pp-card-desc">投稿画像・バナー・<br>Instagramフィードデザイン</p>
-        <span class="pp-price">¥15,000〜 / 枚</span>
-      </div>
-
-      <div class="pp-card">
-        <h3 class="pp-card-title">動画編集<br>（TikTok・リール）</h3>
-        <p class="pp-card-desc">撮影素材の編集、テロップ<br>・BGM・エフェクト対応</p>
-        <span class="pp-price">¥50,000〜 / 本</span>
-      </div>
-
-      <div class="pp-card">
-        <h3 class="pp-card-title">SNS<br>アカウント立ち上げ</h3>
-        <p class="pp-card-desc">0からのアカウント設計〜<br>初期運用セットアップ</p>
-        <span class="pp-price">¥250,000〜 / 一式</span>
-      </div>
-
-      <div class="pp-card">
-        <h3 class="pp-card-title">月次レポート・<br>改善提案</h3>
-        <p class="pp-card-desc">値分析、改善施策提案、<br>定例MTG対応</p>
-        <span class="pp-price">¥50,000〜 / 月</span>
-      </div>
-
     </div>
 
-    <div class="pp-footer-notes">
+    <div class="pp-acc-item" data-index="2">
+      <span class="pp-acc-num">03</span>
+      <span class="pp-acc-title-vert">ビジュアルデザイン</span>
+      <div class="pp-acc-content">
+        <p class="pp-acc-cat">Visual Design</p>
+        <h3 class="pp-acc-name">ビジュアルデザイン<br>制作</h3>
+        <p class="pp-acc-desc">投稿画像・バナー・Instagramフィードデザイン</p>
+        <div class="pp-acc-price">¥15,000〜<span>/ 枚</span></div>
+      </div>
+    </div>
+
+    <div class="pp-acc-item" data-index="3">
+      <span class="pp-acc-num">04</span>
+      <span class="pp-acc-title-vert">動画編集</span>
+      <div class="pp-acc-content">
+        <p class="pp-acc-cat">Video Editing</p>
+        <h3 class="pp-acc-name">動画編集<br>TikTok・リール</h3>
+        <p class="pp-acc-desc">撮影素材の編集、テロップ・BGM・エフェクト対応</p>
+        <div class="pp-acc-price">¥50,000〜<span>/ 本</span></div>
+      </div>
+    </div>
+
+    <div class="pp-acc-item" data-index="4">
+      <span class="pp-acc-num">05</span>
+      <span class="pp-acc-title-vert">アカウント立ち上げ</span>
+      <div class="pp-acc-content">
+        <p class="pp-acc-cat">Account Launch</p>
+        <h3 class="pp-acc-name">SNS アカウント<br>立ち上げ</h3>
+        <p class="pp-acc-desc">0からのアカウント設計〜初期運用セットアップ</p>
+        <div class="pp-acc-price">¥250,000〜<span>/ 一式</span></div>
+      </div>
+    </div>
+
+    <div class="pp-acc-item" data-index="5">
+      <span class="pp-acc-num">06</span>
+      <span class="pp-acc-title-vert">月次レポート</span>
+      <div class="pp-acc-content">
+        <p class="pp-acc-cat">Monthly Report</p>
+        <h3 class="pp-acc-name">月次レポート・<br>改善提案</h3>
+        <p class="pp-acc-desc">値分析、改善施策提案、定例MTG対応</p>
+        <div class="pp-acc-price">¥50,000〜<span>/ 月</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pp-footer-notes">
+    <div>
       <p>※料金は目安です。規模・ボリュームに応じてお見積もりします</p>
       <p>対応SNS：Instagram / TikTok / X（旧Twitter）</p>
     </div>
-    <p class="pp-credit">@CYBRIDGE</p>
+    <span class="pp-credit">@CYBRIDGE</span>
   </div>
 </div>
 
@@ -2557,6 +2606,14 @@
     }
     resize(); draw(); window.addEventListener('resize',resize);
   }
+
+  // Price accordion
+  document.querySelectorAll('.pp-acc-item').forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      document.querySelectorAll('.pp-acc-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
 
   // Works zone tab switching
   function switchZone(zone, btn) {
