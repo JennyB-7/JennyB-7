@@ -444,16 +444,62 @@
   .work-pattern-3 { background: radial-gradient(circle at 30% 70%, #1e1e1e 0%, #111 60%); }
   .work-pattern-4 { background: repeating-linear-gradient(90deg, #111, #111 3px, #161616 3px, #161616 16px); }
 
+  /* Works tab nav */
+  .works-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2px;
+    border-bottom: 1px solid rgba(244,242,238,0.08);
+  }
+  .works-tab {
+    padding: 18px 40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+    cursor: none;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.3s, border-color 0.3s;
+    position: relative;
+  }
+  .works-tab:hover { color: var(--white); }
+  .works-tab.active {
+    color: var(--white);
+    border-bottom-color: var(--white);
+  }
+  .works-tab .tab-num {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--gray);
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .works-tab.active .tab-num { color: rgba(244,242,238,0.4); }
+  .works-tab .tab-sub {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-top: 3px;
+    font-weight: 300;
+  }
+
   /* Works category zones */
   .works-zones {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
+    position: relative;
   }
   .works-zone {
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 2px;
+  }
+  .works-zone.active {
+    display: flex;
   }
   .zone-header {
     padding: 28px 32px;
@@ -484,18 +530,16 @@
     text-transform: uppercase;
   }
   .zone-items {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 2px;
-    flex: 1;
   }
   .zone-items .work-item {
-    flex: 1;
-    min-height: 200px;
+    min-height: 340px;
     aspect-ratio: unset;
   }
   .zone-items .work-item.work-item-hero {
-    flex: 2;
+    grid-column: span 1;
   }
   .work-photo {
     background-size: cover;
@@ -771,8 +815,10 @@
     #hero { padding: 0 24px 60px; }
     #works, #about, #contact { padding: 80px 24px; }
     .works-grid { grid-template-columns: 1fr; }
-    .works-zones { grid-template-columns: 1fr; }
-    .work-item:first-child { grid-row: span 1; aspect-ratio: 4/3; }
+    .works-tabs { overflow-x: auto; }
+    .works-tab { padding: 16px 24px; font-size: 15px; }
+    .zone-items { grid-template-columns: 1fr; }
+    .zone-items .work-item { min-height: 260px; }
     #about { grid-template-columns: 1fr; gap: 40px; }
     footer { padding: 24px; flex-direction: column; gap: 16px; text-align: center; }
     .platforms-strip { padding: 32px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -1408,17 +1454,23 @@
 <!-- Works -->
 <section id="works">
   <p class="section-label reveal">Selected Works</p>
+
+  <!-- Tab nav -->
+  <div class="works-tabs reveal">
+    <button class="works-tab active" onclick="switchZone('sns', this)">
+      <span class="tab-num">01</span>SNS PLANER
+      <span class="tab-sub">コンテンツ企画 · 運用戦略 · クリエイティブ制作</span>
+    </button>
+    <button class="works-tab" onclick="switchZone('design', this)">
+      <span class="tab-num">02</span>DESIGN CENTER
+      <span class="tab-sub">Banner · LP · Visual Design</span>
+    </button>
+  </div>
+
   <div class="works-zones">
 
     <!-- Zone 1: SNS PLANER -->
-    <div class="works-zone reveal">
-      <div class="zone-header">
-        <span class="zone-num">01</span>
-        <div>
-          <h3 class="zone-title">SNS PLANER</h3>
-          <p class="zone-sub">コンテンツ企画 · 運用戦略 · クリエイティブ制作</p>
-        </div>
-      </div>
+    <div class="works-zone active" id="zone-sns">
       <div class="zone-items">
         <div class="work-item work-item-hero" onclick="showPage('beams');return false;" style="cursor:none;">
           <div class="work-bg work-photo" style="background-image:url('beams-01.jpg');"></div>
@@ -1429,7 +1481,7 @@
             <h3 class="work-title">BEAMS Taiwan<br>SNS立ち上げ</h3>
           </div>
         </div>
-        <div class="work-item" style="transition-delay:0.1s">
+        <div class="work-item">
           <div class="work-bg work-pattern-2"></div>
           <div class="work-number">02</div>
           <div class="work-info">
@@ -1441,16 +1493,9 @@
     </div>
 
     <!-- Zone 2: Design Center -->
-    <div class="works-zone reveal" style="transition-delay:0.15s">
-      <div class="zone-header">
-        <span class="zone-num">02</span>
-        <div>
-          <h3 class="zone-title">DESIGN CENTER</h3>
-          <p class="zone-sub">Banner · LP · Visual Design</p>
-        </div>
-      </div>
+    <div class="works-zone" id="zone-design">
       <div class="zone-items">
-        <div class="work-item" style="transition-delay:0.2s">
+        <div class="work-item">
           <div class="work-bg work-pattern-3"></div>
           <div class="work-number">03</div>
           <div class="work-info">
@@ -1458,7 +1503,7 @@
             <h3 class="work-title">Instagram フィード<br>デザイン</h3>
           </div>
         </div>
-        <div class="work-item" style="transition-delay:0.3s">
+        <div class="work-item">
           <div class="work-bg work-pattern-4"></div>
           <div class="work-number">04</div>
           <div class="work-info">
@@ -2263,6 +2308,14 @@
       requestAnimationFrame(draw);
     }
     resize(); draw(); window.addEventListener('resize',resize);
+  }
+
+  // Works zone tab switching
+  function switchZone(zone, btn) {
+    document.querySelectorAll('.works-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.works-zone').forEach(z => z.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('zone-' + zone).classList.add('active');
   }
 
   // Page switching
