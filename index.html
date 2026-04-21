@@ -864,6 +864,168 @@
   #beams-page { display: none; }
   body.show-beams #home-page { display: none; }
   body.show-beams #beams-page { display: block; }
+  #price-page { display: none; }
+  body.show-price #home-page { display: none; }
+  body.show-price #price-page { display: block; }
+  body.show-price > nav { display: none; }
+
+  /* ── Price Page ── */
+  #price-page {
+    background: #EDE8DC;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: #1a1a1a;
+  }
+  .pp-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 48px 0;
+  }
+  .pp-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.1em;
+    color: #1a1a1a;
+    text-decoration: none;
+  }
+  .pp-logo-icon {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #1a1a1a;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .pp-nav-right {
+    display: flex;
+    gap: 12px;
+  }
+  .pp-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border: 1.5px solid #1a1a1a;
+    border-radius: 999px;
+    background: none;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    color: #1a1a1a;
+    cursor: none;
+    letter-spacing: 0.05em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .pp-nav-btn:hover { background: #1a1a1a; color: #EDE8DC; }
+  .pp-body {
+    padding: 32px 48px 48px;
+    position: relative;
+  }
+  .pp-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .pp-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .pp-illust {
+    position: absolute;
+    top: 0;
+    right: 460px;
+    width: 160px;
+    opacity: 0.9;
+    pointer-events: none;
+  }
+  .pp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .pp-card {
+    background: #2ECEC5;
+    border-radius: 20px;
+    padding: 28px 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+  }
+  .pp-card-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(16px, 1.6vw, 22px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.4;
+    word-break: keep-all;
+  }
+  .pp-card-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.7;
+    flex: 1;
+  }
+  .pp-price {
+    display: inline-block;
+    background: #C4A8E8;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px 22px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+  .pp-footer-notes {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .pp-footer-notes p {
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 0.04em;
+  }
+  .pp-footer-notes p::before { content: '• '; }
+  .pp-credit {
+    text-align: right;
+    margin-top: 24px;
+    font-size: 12px;
+    color: #aaa;
+    letter-spacing: 0.08em;
+  }
+  .pp-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: #888;
+    cursor: none;
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    margin-bottom: 24px;
+    padding: 0;
+  }
+  .pp-back:hover { color: #1a1a1a; }
 
   /* Work item hover overlay */
   .work-overlay {
@@ -1303,6 +1465,15 @@
     .timeline-header { grid-template-columns: 1fr; gap: 32px; }
     .career-stats { grid-template-columns: repeat(2, 1fr); padding: 48px 24px; }
   }
+  @media (max-width: 900px) {
+    .pp-nav { padding: 20px 24px 0; }
+    .pp-body { padding: 24px 24px 40px; }
+    .pp-grid { grid-template-columns: repeat(2, 1fr); }
+    .pp-nav-btn { padding: 8px 14px; font-size: 11px; }
+  }
+  @media (max-width: 600px) {
+    .pp-grid { grid-template-columns: 1fr; }
+  }
 
 
   /* Spinning Text Circle */
@@ -1369,6 +1540,7 @@
     <li><a href="#" onclick="showPage('home');setTimeout(()=>document.getElementById('works').scrollIntoView({behavior:'smooth'}),50);return false;">Works</a></li>
     <li><a href="#" onclick="showPage('about');return false;" id="navAbout">About</a></li>
     <li><a href="#" onclick="showPage('career');return false;" id="navCareer">Career</a></li>
+    <li><a href="#" onclick="showPage('price');return false;">Price</a></li>
     <li><a href="#" onclick="showPage('home');setTimeout(()=>document.getElementById('contact').scrollIntoView({behavior:'smooth'}),50);return false;">Contact</a></li>
   </ul>
 </nav>
@@ -2223,6 +2395,80 @@
 </footer>
 </div><!-- end beams-page -->
 
+<!-- Price Page -->
+<div id="price-page">
+  <nav class="pp-nav">
+    <a href="#" class="pp-logo" onclick="showPage('home');return false;">
+      <span class="pp-logo-icon">⇱</span>
+      JENNY
+    </a>
+    <div class="pp-nav-right">
+      <button class="pp-nav-btn" onclick="showPage('home');setTimeout(()=>document.getElementById('works').scrollIntoView({behavior:'smooth'}),50);">
+        ↗ サービス
+      </button>
+      <button class="pp-nav-btn" onclick="showPage('home');return false;">
+        🌐 Portfolio
+      </button>
+    </div>
+  </nav>
+
+  <div class="pp-body">
+    <button class="pp-back" onclick="showPage('home')">← Back to Home</button>
+
+    <div class="pp-title-row">
+      <div>
+        <p class="pp-title">SNS 運用 料金表</p>
+      </div>
+    </div>
+
+    <div class="pp-grid">
+
+      <div class="pp-card">
+        <h3 class="pp-card-title">アカウント設計・<br>ブランディング</h3>
+        <p class="pp-card-desc">プロフィール設計、<br>フィードビジュアル統一、世界観づくり</p>
+        <span class="pp-price">¥150,000〜 / 初期</span>
+      </div>
+
+      <div class="pp-card">
+        <h3 class="pp-card-title">コンテンツ企画・<br>投稿運用</h3>
+        <p class="pp-card-desc">月次投稿計画、キャプション作成、<br>ハッシュタグ設計</p>
+        <span class="pp-price">¥200,000〜 / 月</span>
+      </div>
+
+      <div class="pp-card">
+        <h3 class="pp-card-title">ビジュアルデザイン<br>制作</h3>
+        <p class="pp-card-desc">投稿画像・バナー・<br>Instagramフィードデザイン</p>
+        <span class="pp-price">¥15,000〜 / 枚</span>
+      </div>
+
+      <div class="pp-card">
+        <h3 class="pp-card-title">動画編集<br>（TikTok・リール）</h3>
+        <p class="pp-card-desc">撮影素材の編集、テロップ<br>・BGM・エフェクト対応</p>
+        <span class="pp-price">¥50,000〜 / 本</span>
+      </div>
+
+      <div class="pp-card">
+        <h3 class="pp-card-title">SNS<br>アカウント立ち上げ</h3>
+        <p class="pp-card-desc">0からのアカウント設計〜<br>初期運用セットアップ</p>
+        <span class="pp-price">¥250,000〜 / 一式</span>
+      </div>
+
+      <div class="pp-card">
+        <h3 class="pp-card-title">月次レポート・<br>改善提案</h3>
+        <p class="pp-card-desc">値分析、改善施策提案、<br>定例MTG対応</p>
+        <span class="pp-price">¥50,000〜 / 月</span>
+      </div>
+
+    </div>
+
+    <div class="pp-footer-notes">
+      <p>※料金は目安です。規模・ボリュームに応じてお見積もりします</p>
+      <p>対応SNS：Instagram / TikTok / X（旧Twitter）</p>
+    </div>
+    <p class="pp-credit">@CYBRIDGE</p>
+  </div>
+</div>
+
 <!-- Footer -->
 <footer>
   <span class="footer-copy">© 2025 Jenny. All rights reserved.</span>
@@ -2322,7 +2568,7 @@
 
   // Page switching
   function showPage(page) {
-    document.body.classList.remove('show-about', 'show-career', 'show-beams');
+    document.body.classList.remove('show-about', 'show-career', 'show-beams', 'show-price');
     window.scrollTo(0, 0);
 
     if (page === 'about') {
@@ -2349,6 +2595,9 @@
           obs.observe(el);
         });
       }, 300);
+
+    } else if (page === 'price') {
+      document.body.classList.add('show-price');
 
     } else if (page === 'beams') {
       document.body.classList.add('show-beams');
